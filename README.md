@@ -2,7 +2,7 @@
 
 # openmap-frontend
 **NOT READY FOR PUBLIC & MAINSTEAM USE: HENCE THE DEVELOP BRANCH!**
-
+ 
 ## Table of Contents
 
 * [What is it?](#what-is-it)
