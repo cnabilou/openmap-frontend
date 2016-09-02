@@ -26,7 +26,7 @@ And a local instance of the frontend should be running on your computer.
 
 ## Documentation
 ### Pre-requisites for Project
-	1. Apache / Ngix / web server capable of HTML.
+	1. Apache / Nginx / web server capable of HTML.
 
 ### Configuration
 
