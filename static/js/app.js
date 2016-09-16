@@ -7,23 +7,25 @@ $(function() {
     }
 
     /* custom leaflet plugins */
-    L.CaptionIcon = L.Icon.extend({
-        options: {},
+    L.PokemonIcon = L.Icon.extend({
+        options: {
+            iconSize: [28, 26],
+            iconAnchor: [14, 13]
+        },
+
         initialize: function(options) {
             L.Util.setOptions(this, options);
         },
         createIcon: function() {
+            var remaining = this.options.pokemon.expiry - Math.round(new Date() / 1000);
+
             var container = document.createElement('div');
 
-            if(this.options.custom) {
-                container.className = this.options.customClass;
-                container.innerHTML = "<img src=\"" + this.options.custom + "\">";
-            } else {
-                container.className = 'map-pokemon';
-                container.dataset.pokemonid = this.options.pokemon.id;
-
-                container.innerHTML = "<div class=\"pi pi-" + this.options.pokemon.id + " pi-small\"></div><div class=\"map-pokemon timer\" data-expired=\"false\" data-expiry=\"" + this.options.pokemon.expiry + "\">" + prettyTime(this.options.pokemon.expiry - Math.round(new Date() / 1000)) + "</div>";
-            }
+            container.className = 'map-pokemon';
+            container.dataset.pokemonid = this.options.pokemon.id;
+            container.style.width = '28px';
+            container.style.height = '26px';
+            container.innerHTML = '<div class="pi pi-' + this.options.pokemon.id + ' pi-small" style="position: absolute; margin-top: -20px; margin-left: -20px"></div><div class="map-pokemon timer" data-expired="false" data-expiry="' + this.options.pokemon.expiry + '">' + prettyTime(remaining) + '</div>';
 
             return container;
         },
@@ -169,7 +171,7 @@ $(function() {
             if(data.Ok === true && data.Error.length === 0) {
                 $.each(data.Response.Encounters, (k, encounter) => {
                     this.markers.pokemons.push(L.marker([encounter.Lat, encounter.Lng], {
-                        icon: new L.CaptionIcon({
+                        icon: new L.PokemonIcon({
                             custom: false,
                             pokemon: {
                                 id: encounter.PokemonId,
@@ -187,6 +189,7 @@ $(function() {
                             $(this).parent().fadeTo(500, 0, function() {
                                 $(this).css("visibility", "hidden");
                             });
+
                             $(this).attr("data-expired", true);
                         } else {
                             $(this).text(prettyTime(timeRemaining));
@@ -196,11 +199,13 @@ $(function() {
 
                 $.each(data.Response.Pokestops, (k, pokestop) => {
                     L.marker([pokestop.Lat, pokestop.Lng], {
-                        icon: new L.CaptionIcon({
-                            customClass: 'map-pokestop',
-                            custom: (pokestop.Lured ?
+                        icon: new L.icon({
+                            iconUrl: (pokestop.Lured ?
                                         'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png' :
-                                        'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png')
+                                        'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png'),
+                            iconSize: [31, 31],
+                            iconAnchor: [16, 16],
+                            className: 'map-pokestop'
                         })
                     }).addTo(this.map);
                 });
@@ -221,9 +226,11 @@ $(function() {
                     }
 
                     L.marker([gym.Lat, gym.Lng], {
-                        icon: new L.CaptionIcon({
-                            customClass: 'map-gym',
-                            custom: icon_url
+                        icon: new L.icon({
+                            iconUrl: icon_url,
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 18],
+                            className: 'map-gym'
                         })
                     }).addTo(this.map);
                 });
@@ -309,18 +316,18 @@ $(function() {
                 self.togglePokemonDiv($(this), hidden);
 
                 if(hidden) {
-                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "]").fadeTo(500, 0, function() {
+                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "][data-expired=false]").fadeTo(500, 0, function() {
                         $(this).css("visibility", "hidden");
                     });
                 } else {
-                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "]").fadeTo(0, 500, function() {
+                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "][data-expired=false]").fadeTo(0, 500, function() {
                         $(this).css("visibility", "visible");
                     });
                 }
             });
 
             if(!this.settings['pokemons-show']) {
-                $(".map-pokemon").fadeTo(500, 0, function() {
+                $(".map-pokemon[data-expired=false]").fadeTo(500, 0, function() {
                     $(this).css("visibility", "hidden");
                 });
 
@@ -328,7 +335,7 @@ $(function() {
                     self.togglePokemonDiv($(this), false);
                 });
             } else {
-                $(".map-pokemon").fadeTo(0, 500, function() {
+                $(".map-pokemon[data-expired=false]").fadeTo(0, 500, function() {
                     $(this).css("visibility", "visible");
                 });
 
