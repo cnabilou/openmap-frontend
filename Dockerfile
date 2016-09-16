@@ -1,4 +1,6 @@
 FROM nginx:stable
-RUN apt-get install git
+EXPOSE 80
+RUN apt-get update
+RUN apt-get install -y git
 RUN git clone https://github.com/pogointel/openmap-frontend.git
-COPY /src/ /usr/share/nginx/html
+RUN cp -R openmap-frontend/src/* /usr/share/nginx/html
