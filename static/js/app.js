@@ -8,45 +8,26 @@ $(function() {
 
     /* custom leaflet plugins */
     L.PokemonIcon = L.Icon.extend({
-        options: {
-            iconSize: [28, 26],
-            iconAnchor: [14, 13]
-        },
+    	options: {},
 
-        initialize: function(options) {
-            L.Util.setOptions(this, options);
-        },
-        createIcon: function() {
-            var remaining = this.options.pokemon.expiry - Math.round(new Date() / 1000);
+    	initialize: function (options) {
+    		L.Util.setOptions(this, options);
+    	},
 
-            var container = document.createElement('div');
+    	createIcon: function () {
+    		var div = document.createElement('div');
+    		div.innerHTML = this.options.html;
+    		return div;
+    	},
 
-            container.className = 'map-pokemon';
-            container.dataset.pokemonid = this.options.pokemon.id;
-            container.style.width = '28px';
-            container.style.height = '26px';
-            container.innerHTML = '<div class="pi pi-' + this.options.pokemon.id + ' pi-small" style="position: absolute; margin-top: -20px; margin-left: -20px"></div><div class="map-pokemon timer" data-expired="false" data-expiry="' + this.options.pokemon.expiry + '">' + prettyTime(remaining) + '</div>';
-
-            return container;
-        },
-        createShadow: function() {
-            return null;
-        }
+    	createShadow: function () {
+    		return null;
+    	}
     });
 
     /* app */
     var app = {
         map: null,
-        markers: {
-            pokemons: [],
-            pokestops: [],
-            gyms: []
-        },
-        hiddenMarkers: {
-            pokemons: [],
-            pokestops: [],
-            gyms: []
-        },
         settings: {},
         pokemons: $.parseJSON("{\"1\":\"Bulbasaur\",\"2\":\"Ivysaur\",\"3\":\"Venusaur\",\"4\":\"Charmander\",\"5\":\"Charmeleon\",\"6\":\"Charizard\",\"7\":\"Squirtle\",\"8\":\"Wartortle\",\"9\":\"Blastoise\",\"10\":\"Caterpie\",\"11\":\"Metapod\",\"12\":\"Butterfree\",\"13\":\"Weedle\",\"14\":\"Kakuna\",\"15\":\"Beedrill\",\"16\":\"Pidgey\",\"17\":\"Pidgeotto\",\"18\":\"Pidgeot\",\"19\":\"Rattata\",\"20\":\"Raticate\",\"21\":\"Spearow\",\"22\":\"Fearow\",\"23\":\"Ekans\",\"24\":\"Arbok\",\"25\":\"Pikachu\",\"26\":\"Raichu\",\"27\":\"Sandshrew\",\"28\":\"Sandslash\",\"29\":\"Nidoran F\",\"30\":\"Nidorina\",\"31\":\"Nidoqueen\",\"32\":\"Nidoran M\",\"33\":\"Nidorino\",\"34\":\"Nidoking\",\"35\":\"Clefairy\",\"36\":\"Clefable\",\"37\":\"Vulpix\",\"38\":\"Ninetales\",\"39\":\"Jigglypuff\",\"40\":\"Wigglytuff\",\"41\":\"Zubat\",\"42\":\"Golbat\",\"43\":\"Oddish\",\"44\":\"Gloom\",\"45\":\"Vileplume\",\"46\":\"Paras\",\"47\":\"Parasect\",\"48\":\"Venonat\",\"49\":\"Venomoth\",\"50\":\"Diglett\",\"51\":\"Dugtrio\",\"52\":\"Meowth\",\"53\":\"Persian\",\"54\":\"Psyduck\",\"55\":\"Golduck\",\"56\":\"Mankey\",\"57\":\"Primeape\",\"58\":\"Growlithe\",\"59\":\"Arcanine\",\"60\":\"Poliwag\",\"61\":\"Poliwhirl\",\"62\":\"Poliwrath\",\"63\":\"Abra\",\"64\":\"Kadabra\",\"65\":\"Alakazam\",\"66\":\"Machop\",\"67\":\"Machoke\",\"68\":\"Machamp\",\"69\":\"Bellsprout\",\"70\":\"Weepinbell\",\"71\":\"Victreebel\",\"72\":\"Tentacool\",\"73\":\"Tentacruel\",\"74\":\"Geodude\",\"75\":\"Graveler\",\"76\":\"Golem\",\"77\":\"Ponyta\",\"78\":\"Rapidash\",\"79\":\"Slowpoke\",\"80\":\"Slowbro\",\"81\":\"Magnemite\",\"82\":\"Magneton\",\"83\":\"Farfetch'd\",\"84\":\"Doduo\",\"85\":\"Dodrio\",\"86\":\"Seel\",\"87\":\"Dewgong\",\"88\":\"Grimer\",\"89\":\"Muk\",\"90\":\"Shellder\",\"91\":\"Cloyster\",\"92\":\"Gastly\",\"93\":\"Haunter\",\"94\":\"Gengar\",\"95\":\"Onix\",\"96\":\"Drowzee\",\"97\":\"Hypno\",\"98\":\"Krabby\",\"99\":\"Kingler\",\"100\":\"Voltorb\",\"101\":\"Electrode\",\"102\":\"Exeggcute\",\"103\":\"Exeggutor\",\"104\":\"Cubone\",\"105\":\"Marowak\",\"106\":\"Hitmonlee\",\"107\":\"Hitmonchan\",\"108\":\"Lickitung\",\"109\":\"Koffing\",\"110\":\"Weezing\",\"111\":\"Rhyhorn\",\"112\":\"Rhydon\",\"113\":\"Chansey\",\"114\":\"Tangela\",\"115\":\"Kangaskhan\",\"116\":\"Horsea\",\"117\":\"Seadra\",\"118\":\"Goldeen\",\"119\":\"Seaking\",\"120\":\"Staryu\",\"121\":\"Starmie\",\"122\":\"Mr. Mime\",\"123\":\"Scyther\",\"124\":\"Jynx\",\"125\":\"Electabuzz\",\"126\":\"Magmar\",\"127\":\"Pinsir\",\"128\":\"Tauros\",\"129\":\"Magikarp\",\"130\":\"Gyarados\",\"131\":\"Lapras\",\"132\":\"Ditto\",\"133\":\"Eevee\",\"134\":\"Vaporeon\",\"135\":\"Jolteon\",\"136\":\"Flareon\",\"137\":\"Porygon\",\"138\":\"Omanyte\",\"139\":\"Omastar\",\"140\":\"Kabuto\",\"141\":\"Kabutops\",\"142\":\"Aerodactyl\",\"143\":\"Snorlax\",\"144\":\"Articuno\",\"145\":\"Zapdos\",\"146\":\"Moltres\",\"147\":\"Dratini\",\"148\":\"Dragonair\",\"149\":\"Dragonite\",\"150\":\"Mewtwo\",\"151\":\"Mew\"}"),
 
@@ -140,21 +121,20 @@ $(function() {
         	// create the tile layer with correct attribution
             var osm = new Object();
 
-        	osm.url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        	osm.attribution ='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Icon by <a href="https://icons8.com">Icon8</a>';
+            osm.url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            osm.attribution ='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Icon by <a href="https://icons8.com">Icon8</a>';
 
-        	// start the map in Central USA
-        	this.map.setView(new L.LatLng(49.67400631893335, 12.16737841437996),16);
-        	this.map.addLayer(new L.TileLayer(osm.url, {
+            // start in Santa Monica
+            this.map.setView(new L.LatLng(34.0095897345215,-118.49791288375856),16);
+            this.map.addLayer(new L.TileLayer(osm.url, {
                 minZoom: 2,
                 maxZoom: 17,
                 attribution: osm.attribution
             }));
-        	//map.on('click', onMapClick);
         },
 
         initData: function(callback) {
-            var data = '{"Ok":true,"Error":"","Response":{"Encounters":[{"PokemonId":60,"Lat":49.67400631893335,"Lng":12.16737841437996,"DisappearTime":1473173782}],"Pokestops":[{"Lat":49.675974,"Lng":12.165343,"Lured":false},{"Lat":49.67548,"Lng":12.163332,"Lured":false},{"Lat":49.674443,"Lng":12.165714,"Lured":false},{"Lat":49.676314,"Lng":12.16486,"Lured":false},{"Lat":49.675129,"Lng":12.163405,"Lured":false},{"Lat":49.672729,"Lng":12.167156,"Lured":false},{"Lat":49.676285,"Lng":12.167553,"Lured":false}],"Gyms":[{"Lat":49.675681,"Lng":12.164399,"Team":3},{"Lat":49.675968,"Lng":12.167005,"Team":3}]}}';
+            var data = '{"Ok":true,"Error":"","Response":{"Encounters":[{"PokemonId":111,"Lat":34.009819233420174,"Lng":-118.49729894739845,"DisappearTime":1474041660},{"PokemonId":16,"Lat":34.00968226929167,"Lng":-118.49720771480791,"DisappearTime":1474041712},{"PokemonId":74,"Lat":34.00908765805943,"Lng":-118.49766387725647,"DisappearTime":1474041603},{"PokemonId":29,"Lat":34.009726545220296,"Lng":-118.4983025025673,"DisappearTime":1474041552},{"PokemonId":42,"Lat":34.009463687726715,"Lng":-118.4983937345529,"DisappearTime":1474041767}],"Pokestops":[{"Lat":34.010773,"Lng":-118.495416,"Lured":true},{"Lat":34.009735,"Lng":-118.497273,"Lured":true},{"Lat":34.011466,"Lng":-118.49527,"Lured":true},{"Lat":34.010538,"Lng":-118.496394,"Lured":true},{"Lat":34.010112,"Lng":-118.495739,"Lured":true},{"Lat":34.010408,"Lng":-118.495925,"Lured":true},{"Lat":34.012437,"Lng":-118.495773,"Lured":true},{"Lat":34.011857,"Lng":-118.495984,"Lured":false},{"Lat":34.013441,"Lng":-118.495774,"Lured":false},{"Lat":34.01461,"Lng":-118.496607,"Lured":false},{"Lat":34.01376,"Lng":-118.497972,"Lured":false},{"Lat":34.014702,"Lng":-118.495194,"Lured":false},{"Lat":34.014421,"Lng":-118.497406,"Lured":false},{"Lat":34.013515,"Lng":-118.49689,"Lured":true},{"Lat":34.014017,"Lng":-118.496258,"Lured":false},{"Lat":34.012984,"Lng":-118.497113,"Lured":true},{"Lat":34.012476,"Lng":-118.496885,"Lured":true},{"Lat":34.013926,"Lng":-118.495199,"Lured":false},{"Lat":34.012651,"Lng":-118.496124,"Lured":true},{"Lat":34.013247,"Lng":-118.497667,"Lured":false},{"Lat":34.010272,"Lng":-118.494909,"Lured":false},{"Lat":34.011254,"Lng":-118.492368,"Lured":false},{"Lat":34.012733,"Lng":-118.49291,"Lured":false},{"Lat":34.011083,"Lng":-118.494295,"Lured":false},{"Lat":34.011908,"Lng":-118.492863,"Lured":false},{"Lat":34.010985,"Lng":-118.49314,"Lured":false},{"Lat":34.011936,"Lng":-118.494929,"Lured":false},{"Lat":34.012549,"Lng":-118.494185,"Lured":false},{"Lat":34.009861,"Lng":-118.495626,"Lured":true},{"Lat":34.009471,"Lng":-118.497344,"Lured":true},{"Lat":34.008888,"Lng":-118.497316,"Lured":true},{"Lat":34.009034,"Lng":-118.497669,"Lured":true},{"Lat":34.009634,"Lng":-118.496498,"Lured":true}],"Gyms":[{"Lat":34.011332,"Lng":-118.495089,"Team":2},{"Lat":34.008184,"Lng":-118.497855,"Team":3}]}}';
             data = $.parseJSON(data);
 
             /*
@@ -170,15 +150,16 @@ $(function() {
 
             if(data.Ok === true && data.Error.length === 0) {
                 $.each(data.Response.Encounters, (k, encounter) => {
-                    this.markers.pokemons.push(L.marker([encounter.Lat, encounter.Lng], {
+                    L.marker([encounter.Lat, encounter.Lng], {
                         icon: new L.PokemonIcon({
-                            custom: false,
-                            pokemon: {
-                                id: encounter.PokemonId,
-                                expiry: Math.round(new Date() / 1000 + (60 * 2))
-                            }
+                            html: '<div class="map-pokemon">' +
+                                    '<div class="pi pi-' + encounter.PokemonId + ' pi-small" style="position: absolute; margin-top: -22px; margin-left: -22px"></div>' +
+                                    '<div class="map-pokemon timer" data-expired="false" data-expiry="' + Math.round(new Date() / 1000 + (60 * 2)) + '">' +
+                                        prettyTime(Math.round(new Date() / 1000 + (60 * 2)) - Math.round(new Date() / 1000)) +
+                                    '</div>' +
+                                  '</div>'
                         })
-                    }).addTo(this.map));
+                    }).addTo(this.map);
                 });
 
                 setInterval(() => {
