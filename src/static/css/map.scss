@@ -4,6 +4,16 @@
     width: 100%;
 }
 
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.25; }
+    100% { opacity: 1; }
+}
+
+.scanCircle {
+    animation: pulse 1.5s infinite;
+}
+
 .map-pokemon {
     &.timer {
         background-color: rgba(0, 0, 0, 0.5);
