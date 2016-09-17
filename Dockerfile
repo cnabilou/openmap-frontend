@@ -1,4 +1,4 @@
-FROM nginx:stable
+FROM nginx-php-fpm:latest
 EXPOSE 80
 RUN apt-get update
 RUN apt-get install -y git

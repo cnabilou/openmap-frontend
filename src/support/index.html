@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Contact Us  | OpenPokeMap</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+	<link href='style.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<form action="mail_handler.php" method="post">
+  <h1>Contact Us</h1>
+  <p class="lead">We are a free servie. Allow up to 1 week for inquiries to be processed.</p>
+  <input placeholder="First Name" type="text"  value="" name="first_name" required>
+  <input placeholder="Second Name" type="text"  value="" name="lasts_name" required>
+  <input placeholder="Email address" type="email" onblur="this.setAttribute('value', this.value);" value="" name="email" required>
+  <span class="validation-text">Please enter a valid email address.</span>
+  <div class="flex">
+    <textarea placeholder="Message" rows="1" name="message" required></textarea>
+  </div>
+  <button type="submit" name="submit" value="Submit">Send</button>
+</form>
+
+<a href="https://twitter.com/OpenPokeMap" target="_blank"><i class="fa fa-twitter"></i>Follow Us</a>
+</body>
+</html>
