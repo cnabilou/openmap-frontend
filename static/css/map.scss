@@ -29,3 +29,14 @@
         margin-left: -10px;
     }
 }
+
+#menu {
+    bottom: 30px;
+    right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    #menu {
+        bottom: 80px;
+    }
+}
