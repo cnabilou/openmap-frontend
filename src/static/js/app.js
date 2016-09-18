@@ -218,19 +218,15 @@ $(function() {
                 zoomControl: false
             });
 
-        	// create the tile layer with correct attribution
-            var osm = new Object();
-
-            osm.url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-            osm.attribution ='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Icon by <a href="https://icons8.com">Icon8</a>';
-
             // start in Santa Monica
             this.map.setView(new L.LatLng(34.0095897345215,-118.49791288375856),16);
-            this.map.addLayer(new L.TileLayer(osm.url, {
-                minZoom: 2,
-                maxZoom: 20,
-                attribution: osm.attribution
-            }));
+
+            var gl = L.mapboxGL({
+                accessToken: "opm",
+                style: 'static/data/map.json'
+            }).addTo(this.map);
+
+            console.log(gl);
 
             this.locateUser();
         },
