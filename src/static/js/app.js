@@ -35,6 +35,11 @@ $(function() {
         scanCircle: null,
         working: false,
         hiddenPokemon: [],
+        objectUUIDs: {
+            pokestops: [],
+            gyms: [],
+            pokemons: []
+        },
         pokemons: $.parseJSON("{\"1\":\"Bulbasaur\",\"2\":\"Ivysaur\",\"3\":\"Venusaur\",\"4\":\"Charmander\",\"5\":\"Charmeleon\",\"6\":\"Charizard\",\"7\":\"Squirtle\",\"8\":\"Wartortle\",\"9\":\"Blastoise\",\"10\":\"Caterpie\",\"11\":\"Metapod\",\"12\":\"Butterfree\",\"13\":\"Weedle\",\"14\":\"Kakuna\",\"15\":\"Beedrill\",\"16\":\"Pidgey\",\"17\":\"Pidgeotto\",\"18\":\"Pidgeot\",\"19\":\"Rattata\",\"20\":\"Raticate\",\"21\":\"Spearow\",\"22\":\"Fearow\",\"23\":\"Ekans\",\"24\":\"Arbok\",\"25\":\"Pikachu\",\"26\":\"Raichu\",\"27\":\"Sandshrew\",\"28\":\"Sandslash\",\"29\":\"Nidoran F\",\"30\":\"Nidorina\",\"31\":\"Nidoqueen\",\"32\":\"Nidoran M\",\"33\":\"Nidorino\",\"34\":\"Nidoking\",\"35\":\"Clefairy\",\"36\":\"Clefable\",\"37\":\"Vulpix\",\"38\":\"Ninetales\",\"39\":\"Jigglypuff\",\"40\":\"Wigglytuff\",\"41\":\"Zubat\",\"42\":\"Golbat\",\"43\":\"Oddish\",\"44\":\"Gloom\",\"45\":\"Vileplume\",\"46\":\"Paras\",\"47\":\"Parasect\",\"48\":\"Venonat\",\"49\":\"Venomoth\",\"50\":\"Diglett\",\"51\":\"Dugtrio\",\"52\":\"Meowth\",\"53\":\"Persian\",\"54\":\"Psyduck\",\"55\":\"Golduck\",\"56\":\"Mankey\",\"57\":\"Primeape\",\"58\":\"Growlithe\",\"59\":\"Arcanine\",\"60\":\"Poliwag\",\"61\":\"Poliwhirl\",\"62\":\"Poliwrath\",\"63\":\"Abra\",\"64\":\"Kadabra\",\"65\":\"Alakazam\",\"66\":\"Machop\",\"67\":\"Machoke\",\"68\":\"Machamp\",\"69\":\"Bellsprout\",\"70\":\"Weepinbell\",\"71\":\"Victreebel\",\"72\":\"Tentacool\",\"73\":\"Tentacruel\",\"74\":\"Geodude\",\"75\":\"Graveler\",\"76\":\"Golem\",\"77\":\"Ponyta\",\"78\":\"Rapidash\",\"79\":\"Slowpoke\",\"80\":\"Slowbro\",\"81\":\"Magnemite\",\"82\":\"Magneton\",\"83\":\"Farfetch'd\",\"84\":\"Doduo\",\"85\":\"Dodrio\",\"86\":\"Seel\",\"87\":\"Dewgong\",\"88\":\"Grimer\",\"89\":\"Muk\",\"90\":\"Shellder\",\"91\":\"Cloyster\",\"92\":\"Gastly\",\"93\":\"Haunter\",\"94\":\"Gengar\",\"95\":\"Onix\",\"96\":\"Drowzee\",\"97\":\"Hypno\",\"98\":\"Krabby\",\"99\":\"Kingler\",\"100\":\"Voltorb\",\"101\":\"Electrode\",\"102\":\"Exeggcute\",\"103\":\"Exeggutor\",\"104\":\"Cubone\",\"105\":\"Marowak\",\"106\":\"Hitmonlee\",\"107\":\"Hitmonchan\",\"108\":\"Lickitung\",\"109\":\"Koffing\",\"110\":\"Weezing\",\"111\":\"Rhyhorn\",\"112\":\"Rhydon\",\"113\":\"Chansey\",\"114\":\"Tangela\",\"115\":\"Kangaskhan\",\"116\":\"Horsea\",\"117\":\"Seadra\",\"118\":\"Goldeen\",\"119\":\"Seaking\",\"120\":\"Staryu\",\"121\":\"Starmie\",\"122\":\"Mr. Mime\",\"123\":\"Scyther\",\"124\":\"Jynx\",\"125\":\"Electabuzz\",\"126\":\"Magmar\",\"127\":\"Pinsir\",\"128\":\"Tauros\",\"129\":\"Magikarp\",\"130\":\"Gyarados\",\"131\":\"Lapras\",\"132\":\"Ditto\",\"133\":\"Eevee\",\"134\":\"Vaporeon\",\"135\":\"Jolteon\",\"136\":\"Flareon\",\"137\":\"Porygon\",\"138\":\"Omanyte\",\"139\":\"Omastar\",\"140\":\"Kabuto\",\"141\":\"Kabutops\",\"142\":\"Aerodactyl\",\"143\":\"Snorlax\",\"144\":\"Articuno\",\"145\":\"Zapdos\",\"146\":\"Moltres\",\"147\":\"Dratini\",\"148\":\"Dragonair\",\"149\":\"Dragonite\",\"150\":\"Mewtwo\",\"151\":\"Mew\"}"),
 
         togglePokemonDiv: function(div, toggleOverride) {
@@ -231,7 +236,7 @@ $(function() {
         },
 
         initData: function(callback) {
-            var data = '{"Ok":true,"Error":"","Response":{"Encounters":[{"PokemonId":111,"Lat":34.009819233420174,"Lng":-118.49729894739845,"DisappearTime":1474041660},{"PokemonId":16,"Lat":34.00968226929167,"Lng":-118.49720771480791,"DisappearTime":1474041712},{"PokemonId":74,"Lat":34.00908765805943,"Lng":-118.49766387725647,"DisappearTime":1474041603},{"PokemonId":29,"Lat":34.009726545220296,"Lng":-118.4983025025673,"DisappearTime":1474041552},{"PokemonId":42,"Lat":34.009463687726715,"Lng":-118.4983937345529,"DisappearTime":1474041767}],"Pokestops":[{"Lat":34.010773,"Lng":-118.495416,"Lured":true},{"Lat":34.009735,"Lng":-118.497273,"Lured":true},{"Lat":34.011466,"Lng":-118.49527,"Lured":true},{"Lat":34.010538,"Lng":-118.496394,"Lured":true},{"Lat":34.010112,"Lng":-118.495739,"Lured":true},{"Lat":34.010408,"Lng":-118.495925,"Lured":true},{"Lat":34.012437,"Lng":-118.495773,"Lured":true},{"Lat":34.011857,"Lng":-118.495984,"Lured":false},{"Lat":34.013441,"Lng":-118.495774,"Lured":false},{"Lat":34.01461,"Lng":-118.496607,"Lured":false},{"Lat":34.01376,"Lng":-118.497972,"Lured":false},{"Lat":34.014702,"Lng":-118.495194,"Lured":false},{"Lat":34.014421,"Lng":-118.497406,"Lured":false},{"Lat":34.013515,"Lng":-118.49689,"Lured":true},{"Lat":34.014017,"Lng":-118.496258,"Lured":false},{"Lat":34.012984,"Lng":-118.497113,"Lured":true},{"Lat":34.012476,"Lng":-118.496885,"Lured":true},{"Lat":34.013926,"Lng":-118.495199,"Lured":false},{"Lat":34.012651,"Lng":-118.496124,"Lured":true},{"Lat":34.013247,"Lng":-118.497667,"Lured":false},{"Lat":34.010272,"Lng":-118.494909,"Lured":false},{"Lat":34.011254,"Lng":-118.492368,"Lured":false},{"Lat":34.012733,"Lng":-118.49291,"Lured":false},{"Lat":34.011083,"Lng":-118.494295,"Lured":false},{"Lat":34.011908,"Lng":-118.492863,"Lured":false},{"Lat":34.010985,"Lng":-118.49314,"Lured":false},{"Lat":34.011936,"Lng":-118.494929,"Lured":false},{"Lat":34.012549,"Lng":-118.494185,"Lured":false},{"Lat":34.009861,"Lng":-118.495626,"Lured":true},{"Lat":34.009471,"Lng":-118.497344,"Lured":true},{"Lat":34.008888,"Lng":-118.497316,"Lured":true},{"Lat":34.009034,"Lng":-118.497669,"Lured":true},{"Lat":34.009634,"Lng":-118.496498,"Lured":true}],"Gyms":[{"Lat":34.011332,"Lng":-118.495089,"Team":2},{"Lat":34.008184,"Lng":-118.497855,"Team":3}]}}';
+            var data = '{"Ok":true,"Error":"","Response":{"Encounters":[{"EncounterId":"8e9jbrvik565","PokemonId":41,"Lat":34.009819233420174,"Lng":-118.49729894739845,"DisappearTime":1474178460},{"EncounterId":"1q5lbgh7othd9","PokemonId":41,"Lat":34.00968226929167,"Lng":-118.49720771480791,"DisappearTime":1474178512},{"EncounterId":"rfhoar6a5it9","PokemonId":29,"Lat":34.00908765805943,"Lng":-118.49766387725647,"DisappearTime":1474178403},{"EncounterId":"10qlayj1vwzb1","PokemonId":23,"Lat":34.009726545220296,"Lng":-118.4983025025673,"DisappearTime":1474178352},{"EncounterId":"s7xku0h6g99p","PokemonId":35,"Lat":34.009463687726715,"Lng":-118.4983937345529,"DisappearTime":1474178567}],"Pokestops":[{"Id":"31b1a0e2cadf4603855ff5a5d80ef225.16","Lat":34.010773,"Lng":-118.495416,"Lured":true},{"Id":"455be2e5e5c34b40b20dcde1d6c4277f.16","Lat":34.009735,"Lng":-118.497273,"Lured":true},{"Id":"554204bdc6cb4733955f11f7e6d57b8a.16","Lat":34.011466,"Lng":-118.49527,"Lured":true},{"Id":"afee005c1ec94567b727a8f74202dec0.16","Lat":34.010538,"Lng":-118.496394,"Lured":true},{"Id":"b13d36808456456fb94fcf4135d53ddc.16","Lat":34.010112,"Lng":-118.495739,"Lured":true},{"Id":"c419e15ba3664ce8bc90267b4ecc3ebc.16","Lat":34.010408,"Lng":-118.495925,"Lured":true},{"Id":"dd2631e4ab1640a3ade21c33477bca05.11","Lat":34.012437,"Lng":-118.495773,"Lured":false},{"Id":"ecb032d8d16747dbad9fbc688f8d174b.16","Lat":34.011857,"Lng":-118.495984,"Lured":true},{"Id":"07b36878051c407db7d2eb998005128a.16","Lat":34.013441,"Lng":-118.495774,"Lured":false},{"Id":"3c1b1a44c72d4819a225b8139bcfd97e.16","Lat":34.01461,"Lng":-118.496607,"Lured":false},{"Id":"42325090f1f443c499a765a06850c435.16","Lat":34.01376,"Lng":-118.497972,"Lured":false},{"Id":"5420f52faf294cdcbba72166743ef45b.16","Lat":34.014702,"Lng":-118.495194,"Lured":false},{"Id":"69f67ced424c4c01b4085b4e75934f58.16","Lat":34.014421,"Lng":-118.497406,"Lured":false},{"Id":"6d30b3a215c6425e92541545e6637d01.16","Lat":34.013515,"Lng":-118.49689,"Lured":true},{"Id":"aac7612eca764277956959f3a1380689.16","Lat":34.014017,"Lng":-118.496258,"Lured":false},{"Id":"d027600e9f9b4756bc5c349ffe9c12ef.16","Lat":34.012984,"Lng":-118.497113,"Lured":true},{"Id":"d09c2c7324aa4402a0f5726bfbba8c0a.16","Lat":34.012476,"Lng":-118.496885,"Lured":true},{"Id":"ddb018b0d1fc46aba1255da2638a0a6e.16","Lat":34.013926,"Lng":-118.495199,"Lured":false},{"Id":"e16e794938aa44db88e8b8de485ea1f2.16","Lat":34.012651,"Lng":-118.496124,"Lured":false},{"Id":"ec7803793b3a4c7fb8c4c02d8e1c619d.16","Lat":34.013247,"Lng":-118.497667,"Lured":true},{"Id":"191a498f1cf44e809eab78de38be4695.16","Lat":34.010272,"Lng":-118.494909,"Lured":true},{"Id":"22a32e1dfb374e87a7ab23e5174a68e8.16","Lat":34.011254,"Lng":-118.492368,"Lured":true},{"Id":"4b739387b2544096b8bb217c94d4bc78.16","Lat":34.012733,"Lng":-118.49291,"Lured":false},{"Id":"5acf98b543da4f409fc4abb0b74d7f97.16","Lat":34.011083,"Lng":-118.494295,"Lured":false},{"Id":"7d7e131648b04788ba2a973a86ee6db4.16","Lat":34.011908,"Lng":-118.492863,"Lured":false},{"Id":"af9f7d0bded04f6fb023b855b4e63dae.16","Lat":34.010985,"Lng":-118.49314,"Lured":false},{"Id":"c0a44be424084084a446ed5bb8fd76ff.16","Lat":34.011936,"Lng":-118.494929,"Lured":false},{"Id":"f997334e35b04f59967d97084f3ec95d.12","Lat":34.012549,"Lng":-118.494185,"Lured":false},{"Id":"11410a03fc7f4c9f9c392e8fb2353fac.16","Lat":34.009861,"Lng":-118.495626,"Lured":true},{"Id":"246cd78fc6cb4addb7ff69d695eca867.12","Lat":34.009471,"Lng":-118.497344,"Lured":true},{"Id":"7081ff4cf8644457ac9387ff28917291.16","Lat":34.008888,"Lng":-118.497316,"Lured":true},{"Id":"975805c30dc6403ab07856c607e9e9a9.12","Lat":34.009034,"Lng":-118.497669,"Lured":true},{"Id":"c289811dc758426f9c4f0b6f0ae71ecc.16","Lat":34.009634,"Lng":-118.496498,"Lured":false}],"Gyms":[{"Id":"83ce2471671845a3b94d8f551dd5cd95.12","Lat":34.011332,"Lng":-118.495089,"Team":3},{"Id":"6e783aa133da45e7b7b82d46fab7b634.12","Lat":34.008184,"Lng":-118.497855,"Team":2}]}}';
             data = $.parseJSON(data);
 
             /*
@@ -247,16 +252,20 @@ $(function() {
 
             if(data.Ok === true && data.Error.length === 0) {
                 $.each(data.Response.Encounters, (k, encounter) => {
-                    L.marker([encounter.Lat, encounter.Lng], {
-                        icon: new L.PokemonIcon({
-                            html: '<div class="map-pokemon" data-pokemonid="' + encounter.PokemonId + '">' +
-                                    '<div class="pi pi-' + encounter.PokemonId + ' pi-small" style="position: absolute; margin-top: -22px; margin-left: -22px"></div>' +
-                                    '<div class="map-pokemon timer" data-expired="false" data-expiry="' + Math.round(new Date() / 1000 + (60 * 2)) + '">' +
-                                        prettyTime(Math.round(new Date() / 1000 + (60 * 2)) - Math.round(new Date() / 1000)) +
-                                    '</div>' +
-                                  '</div>'
-                        })
-                    }).addTo(this.map);
+                    if(this.objectUUIDs.pokemons.indexOf(encounter.EncounterId) == -1) {
+                        L.marker([encounter.Lat, encounter.Lng], {
+                            icon: new L.PokemonIcon({
+                                html: '<div class="map-pokemon" data-pokemonid="' + encounter.PokemonId + '">' +
+                                        '<div class="pi pi-' + encounter.PokemonId + ' pi-small" style="position: absolute; margin-top: -22px; margin-left: -22px"></div>' +
+                                        '<div class="map-pokemon timer" data-expired="false" data-expiry="' + Math.round(new Date() / 1000 + (60 * 2)) + '">' +
+                                            prettyTime(Math.round(new Date() / 1000 + (60 * 2)) - Math.round(new Date() / 1000)) +
+                                        '</div>' +
+                                      '</div>'
+                            })
+                        }).addTo(this.map);
+
+                        this.objectUUIDs.pokemons.push(encounter.EncounterId);
+                    }
                 });
 
                 setInterval(() => {
@@ -276,41 +285,49 @@ $(function() {
                 }, 1000);
 
                 $.each(data.Response.Pokestops, (k, pokestop) => {
-                    L.marker([pokestop.Lat, pokestop.Lng], {
-                        icon: new L.icon({
-                            iconUrl: (pokestop.Lured ?
-                                        'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png' :
-                                        'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png'),
-                            iconSize: [31, 31],
-                            iconAnchor: [16, 16],
-                            className: 'map-pokestop'
-                        })
-                    }).addTo(this.map);
+                    if(this.objectUUIDs.pokestops.indexOf(pokestop.Id) == -1) {
+                        L.marker([pokestop.Lat, pokestop.Lng], {
+                            icon: new L.icon({
+                                iconUrl: (pokestop.Lured ?
+                                            'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png' :
+                                            'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png'),
+                                iconSize: [31, 31],
+                                iconAnchor: [16, 16],
+                                className: 'map-pokestop'
+                            })
+                        }).addTo(this.map);
+
+                        this.objectUUIDs.pokestops.push(pokestop.Id);
+                    }
                 });
 
                 $.each(data.Response.Gyms, (k, gym) => {
-                    var icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Harmony.png';
+                    if(this.objectUUIDs.gyms.indexOf(gym.Id) == -1) {
+                        var icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Harmony.png';
 
-                    switch(gym.Team) {
-                        case 1:
-                            icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Instinct.png';
-                            break;
-                        case 2:
-                            icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Mystic.png';
-                            break;
-                        case 3:
-                            icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Valor.png';
-                            break;
+                        switch(gym.Team) {
+                            case 1:
+                                icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Instinct.png';
+                                break;
+                            case 2:
+                                icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Mystic.png';
+                                break;
+                            case 3:
+                                icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Valor.png';
+                                break;
+                        }
+
+                        L.marker([gym.Lat, gym.Lng], {
+                            icon: new L.icon({
+                                iconUrl: icon_url,
+                                iconSize: [36, 36],
+                                iconAnchor: [18, 18],
+                                className: 'map-gym'
+                            })
+                        }).addTo(this.map);
+
+                        this.objectUUIDs.gyms.push(gym.Id);
                     }
-
-                    L.marker([gym.Lat, gym.Lng], {
-                        icon: new L.icon({
-                            iconUrl: icon_url,
-                            iconSize: [36, 36],
-                            iconAnchor: [18, 18],
-                            className: 'map-gym'
-                        })
-                    }).addTo(this.map);
                 });
             } else {
                 // error handling
