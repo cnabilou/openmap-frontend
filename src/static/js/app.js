@@ -226,8 +226,6 @@ $(function() {
                 style: 'static/data/map.json'
             }).addTo(this.map);
 
-            console.log(gl);
-
             this.locateUser();
         },
 
