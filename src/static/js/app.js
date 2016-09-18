@@ -1,3 +1,5 @@
+(function(a){(jQuery.browser=jQuery.browser||{}).mobile=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))})(navigator.userAgent||navigator.vendor||window.opera);
+
 $(function() {
     function prettyTime(seconds) {
         var minutes = Math.floor(seconds / 60);
@@ -30,6 +32,8 @@ $(function() {
         map: null,
         settings: {},
         clickedMarker: null,
+        scanCircle: null,
+        working: false,
         hiddenPokemon: [],
         pokemons: $.parseJSON("{\"1\":\"Bulbasaur\",\"2\":\"Ivysaur\",\"3\":\"Venusaur\",\"4\":\"Charmander\",\"5\":\"Charmeleon\",\"6\":\"Charizard\",\"7\":\"Squirtle\",\"8\":\"Wartortle\",\"9\":\"Blastoise\",\"10\":\"Caterpie\",\"11\":\"Metapod\",\"12\":\"Butterfree\",\"13\":\"Weedle\",\"14\":\"Kakuna\",\"15\":\"Beedrill\",\"16\":\"Pidgey\",\"17\":\"Pidgeotto\",\"18\":\"Pidgeot\",\"19\":\"Rattata\",\"20\":\"Raticate\",\"21\":\"Spearow\",\"22\":\"Fearow\",\"23\":\"Ekans\",\"24\":\"Arbok\",\"25\":\"Pikachu\",\"26\":\"Raichu\",\"27\":\"Sandshrew\",\"28\":\"Sandslash\",\"29\":\"Nidoran F\",\"30\":\"Nidorina\",\"31\":\"Nidoqueen\",\"32\":\"Nidoran M\",\"33\":\"Nidorino\",\"34\":\"Nidoking\",\"35\":\"Clefairy\",\"36\":\"Clefable\",\"37\":\"Vulpix\",\"38\":\"Ninetales\",\"39\":\"Jigglypuff\",\"40\":\"Wigglytuff\",\"41\":\"Zubat\",\"42\":\"Golbat\",\"43\":\"Oddish\",\"44\":\"Gloom\",\"45\":\"Vileplume\",\"46\":\"Paras\",\"47\":\"Parasect\",\"48\":\"Venonat\",\"49\":\"Venomoth\",\"50\":\"Diglett\",\"51\":\"Dugtrio\",\"52\":\"Meowth\",\"53\":\"Persian\",\"54\":\"Psyduck\",\"55\":\"Golduck\",\"56\":\"Mankey\",\"57\":\"Primeape\",\"58\":\"Growlithe\",\"59\":\"Arcanine\",\"60\":\"Poliwag\",\"61\":\"Poliwhirl\",\"62\":\"Poliwrath\",\"63\":\"Abra\",\"64\":\"Kadabra\",\"65\":\"Alakazam\",\"66\":\"Machop\",\"67\":\"Machoke\",\"68\":\"Machamp\",\"69\":\"Bellsprout\",\"70\":\"Weepinbell\",\"71\":\"Victreebel\",\"72\":\"Tentacool\",\"73\":\"Tentacruel\",\"74\":\"Geodude\",\"75\":\"Graveler\",\"76\":\"Golem\",\"77\":\"Ponyta\",\"78\":\"Rapidash\",\"79\":\"Slowpoke\",\"80\":\"Slowbro\",\"81\":\"Magnemite\",\"82\":\"Magneton\",\"83\":\"Farfetch'd\",\"84\":\"Doduo\",\"85\":\"Dodrio\",\"86\":\"Seel\",\"87\":\"Dewgong\",\"88\":\"Grimer\",\"89\":\"Muk\",\"90\":\"Shellder\",\"91\":\"Cloyster\",\"92\":\"Gastly\",\"93\":\"Haunter\",\"94\":\"Gengar\",\"95\":\"Onix\",\"96\":\"Drowzee\",\"97\":\"Hypno\",\"98\":\"Krabby\",\"99\":\"Kingler\",\"100\":\"Voltorb\",\"101\":\"Electrode\",\"102\":\"Exeggcute\",\"103\":\"Exeggutor\",\"104\":\"Cubone\",\"105\":\"Marowak\",\"106\":\"Hitmonlee\",\"107\":\"Hitmonchan\",\"108\":\"Lickitung\",\"109\":\"Koffing\",\"110\":\"Weezing\",\"111\":\"Rhyhorn\",\"112\":\"Rhydon\",\"113\":\"Chansey\",\"114\":\"Tangela\",\"115\":\"Kangaskhan\",\"116\":\"Horsea\",\"117\":\"Seadra\",\"118\":\"Goldeen\",\"119\":\"Seaking\",\"120\":\"Staryu\",\"121\":\"Starmie\",\"122\":\"Mr. Mime\",\"123\":\"Scyther\",\"124\":\"Jynx\",\"125\":\"Electabuzz\",\"126\":\"Magmar\",\"127\":\"Pinsir\",\"128\":\"Tauros\",\"129\":\"Magikarp\",\"130\":\"Gyarados\",\"131\":\"Lapras\",\"132\":\"Ditto\",\"133\":\"Eevee\",\"134\":\"Vaporeon\",\"135\":\"Jolteon\",\"136\":\"Flareon\",\"137\":\"Porygon\",\"138\":\"Omanyte\",\"139\":\"Omastar\",\"140\":\"Kabuto\",\"141\":\"Kabutops\",\"142\":\"Aerodactyl\",\"143\":\"Snorlax\",\"144\":\"Articuno\",\"145\":\"Zapdos\",\"146\":\"Moltres\",\"147\":\"Dratini\",\"148\":\"Dragonair\",\"149\":\"Dragonite\",\"150\":\"Mewtwo\",\"151\":\"Mew\"}"),
 
@@ -61,6 +65,10 @@ $(function() {
             this.initData(() => {
                 this.loadSettings();
                 this.initListeners();
+
+                setTimeout(function() {
+                    if(jQuery.browser.mobile) $("a").attr("target", "_blank");
+                }, 350);
             });
 
             if(!this.storage.available() || typeof this.storage.get("PGOM_show_welcome") !== 'string') {
@@ -71,6 +79,8 @@ $(function() {
                 $(".pokemon-list").append("<div class=\"pokemon-list-pokemon\" data-pokemon-id=\"" + id + "\" data-selected=\"true\"><div class=\"pokemon-list-pokemon-image pi pi-" + id + "\"></div><div class=\"pokemon-list-pokemon-name\">" + name + "</div></div>");
             });
 
+            this.calibratePokemonList();
+
             $("#shown-pokemons .pokemon-list-pokemon").on('click', function() {
                 $("[data-setting=pokemons-show] .setting-controller").attr("disabled", "disabled");
             });
@@ -78,24 +88,76 @@ $(function() {
             $(".pokemon-list .pokemon-list-pokemon").on('click', function() {
                 self.togglePokemonDiv($(this));
             });
+
+            $(window).on('resize', () => {
+                this.calibratePokemonList();
+            });
+        },
+
+        calibratePokemonList: function() {
+            if($(window).width() <= 800) {
+                $(".pokemon-list-pokemon").each(function() {
+                    if($(this).attr('data-resized') != 'true') {
+                        $(this).attr('data-resized', 'true');
+
+                        $(this).css({
+                            width: '50px',
+                            height: '50px',
+                            'border-radius': '6px',
+                        });
+
+                        $(this).find('.pokemon-list-pokemon-image').css({
+                            transform: 'scale(0.5)'
+                        });
+
+                        $(this).find('.pokemon-list-pokemon-name').css({
+                            'font-size': '5pt'
+                        });
+                    }
+                });
+            } else {
+                $(".pokemon-list-pokemon").each(function() {
+                    if($(this).attr('data-resized') != 'false') {
+                        $(this).attr('data-resized', 'false');
+
+                        $(this).css({
+                            width: '100px',
+                            height: '100px',
+                            'border-radius': '11px',
+                        });
+
+                        $(this).find('.pokemon-list-pokemon-image').css({
+                            transform: 'scale(1)'
+                        });
+
+                        $(this).find('.pokemon-list-pokemon-name').css({
+                            'font-size': '12pt'
+                        });
+                    }
+                });
+            }
+        },
+
+        locateUser: function() {
+            navigator.geolocation.getCurrentPosition((location) => {
+                this.map.setView(new L.LatLng(location.coords.latitude, location.coords.longitude), 15);
+
+                L.marker([location.coords.latitude, location.coords.longitude], {
+                    icon: L.icon.glyph({
+                        prefix: 'mdi',
+                        glyph: 'account-location',
+                        background: false,
+                        glyphSize: '15pt'
+                    })
+                }).addTo(this.map);
+            });
         },
 
         initListeners: function() {
             $("#settings-trigger").leanModal();
 
             $("#locate-trigger").on('click', () => {
-                navigator.geolocation.getCurrentPosition((location) => {
-            		this.map.setView(new L.LatLng(location.coords.latitude, location.coords.longitude), 15);
-
-                    L.marker([location.coords.latitude, location.coords.longitude], {
-                        icon: L.icon.glyph({
-                            prefix: 'mdi',
-                            glyph: 'account-location',
-                            background: false,
-                            glyphSize: '15pt'
-                        })
-                    }).addTo(this.map);
-            	});
+                this.locateUser();
             });
 
             $("#save-settings").on('click', () => {
@@ -119,14 +181,24 @@ $(function() {
             });
 
             this.map.on('click', (e) => {
-                if(this.clickedMarker != null) this.map.removeLayer(this.clickedMarker);
-                this.clickedMarker = L.marker(e.latlng, {
-                    icon: L.icon.glyph({
-                        prefix: 'mdi',
-                        glyph: 'map-marker',
-                        background: false,
-                        glyphSize: '15pt'
-                    })
+                if(!this.working) {
+                    if(this.clickedMarker != null) this.map.removeLayer(this.clickedMarker);
+                    this.clickedMarker = L.marker(e.latlng, {
+                        icon: L.icon.glyph({
+                            prefix: 'mdi',
+                            glyph: 'map-marker',
+                            background: false,
+                            glyphSize: '15pt'
+                        })
+                    }).addTo(this.map);
+                }
+
+                if(this.scanCircle != null) this.map.removeLayer(this.scanCircle);
+                this.scanCircle = L.circle(e.latlng, 70, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    className: 'scanCircle'
                 }).addTo(this.map);
             });
 
@@ -151,9 +223,11 @@ $(function() {
             this.map.setView(new L.LatLng(34.0095897345215,-118.49791288375856),16);
             this.map.addLayer(new L.TileLayer(osm.url, {
                 minZoom: 2,
-                maxZoom: 17,
+                maxZoom: 20,
                 attribution: osm.attribution
             }));
+
+            this.locateUser();
         },
 
         initData: function(callback) {
