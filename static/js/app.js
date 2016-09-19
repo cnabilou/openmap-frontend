@@ -72,7 +72,7 @@ $(function() {
                 this.initListeners();
 
                 setTimeout(function() {
-                    if(jQuery.browser.mobile) $("a").attr("target", "_blank");
+                    if(jQuery.browser.mobile) $("a:not([href^=#])").attr("target", "_blank");
                 }, 350);
             });
 
@@ -215,11 +215,17 @@ $(function() {
 
         initMap: function() {
             this.map = new L.Map('map', {
-                zoomControl: false
+                zoomControl: false,
+                attributionControl: false
             });
 
             // start in Santa Monica
             this.map.setView(new L.LatLng(34.0095897345215,-118.49791288375856),16);
+
+            L.control.attribution({
+                position: 'topright',
+                prefix: 'Leaflet | Map tiles hosted by <a href="https://fastpokemap.se>FPM</a> | © OpenStreetMap contributors'
+            }).addTo(this.map);
 
             var gl = L.mapboxGL({
                 accessToken: "opm",
