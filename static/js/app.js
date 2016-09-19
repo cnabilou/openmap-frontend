@@ -72,7 +72,7 @@ $(function() {
                 this.initListeners();
 
                 setTimeout(function() {
-                    if(jQuery.browser.mobile) $("a").attr("target", "_blank");
+                    if(jQuery.browser.mobile) $("a:not([href^=#])").attr("target", "_blank");
                 }, 350);
             });
 
