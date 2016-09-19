@@ -29,3 +29,28 @@
         margin-left: -10px;
     }
 }
+
+.ad-placement {
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    div {
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+#menu {
+    bottom: 30px;
+    right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    #menu {
+        bottom: 80px;
+    }
+}
