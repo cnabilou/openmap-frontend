@@ -43,6 +43,10 @@ $(function() {
             lng: 0,
             lat: 0
         },
+        lastCachePosition: {
+            lng: 0,
+            lat: 0
+        },
         api: {
             url: 'https://api.openpokemap.pw',
             timeout: 33 // seconds
@@ -166,15 +170,21 @@ $(function() {
             try {
                 if(navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(location) {
-                        self.map.flyTo({
+                        self.map.easeTo({
                             center: [location.coords.longitude, location.coords.latitude],
-                            speed: 0.2,
                             zoom: 14,
                             curve: 1,
                             easing: function(t) {
                                 return t;
                             }
                         });
+
+                        self.map.currentPosition.lat = location.coords.latitude;
+                        self.map.currentPosition.lng = location.coords.longitude;
+                        self.map.lastCachePosition.lat = location.coords.latitude;
+                        self.map.lastCachePosition.lng = location.coords.longitude;
+
+                        self.loadCache(location.coords.longitude, location.coords.latitude, function(){});
                     });
                 }
             } catch(e){}//ignored
@@ -260,6 +270,25 @@ $(function() {
                     }
                 });
             }, 1000);
+
+            self.map.on('dragend', function() {
+                self.currentPosition.lat = self.map.getCenter().lat;
+                self.currentPosition.lng = self.map.getCenter().lng;
+
+                if(self.distanceBetween(self.currentPosition.lat, self.currentPosition.lng, self.lastCachePosition.lat, self.lastCachePosition.lng) * 1000 > 420) {
+                    self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function(){});
+                }
+            });
+        },
+
+        distanceBetween: function(lat1, lon1, lat2, lon2) {
+            var p = Math.PI;
+            var c = Math.cos;
+            var a = 0.5 - c((lat2 - lat1) * p)/2 +
+                    c(lat1 * p) * c(lat2 * p) *
+                    (1 - c((lon2 - lon1) * p))/2;
+
+            return 12742 * Math.asin(Math.sqrt(a));
         },
 
         initMap: function(callback) {
