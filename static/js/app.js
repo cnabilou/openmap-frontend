@@ -303,9 +303,12 @@ $(function() {
                 success: function(data) {
                     if(typeof data !== 'object') $.parseJSON(data);
 
+                    console.info("Loaded Pokémon");
+
                     self.pokemons = data;
 
                     self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function() {
+                        console.info("Loaded current position cache");
                         callback();
                     });
                 }
