@@ -269,13 +269,19 @@ $(function() {
         },
 
         distanceBetween: function(lat1, lon1, lat2, lon2) {
-            var p = Math.PI;
-            var c = Math.cos;
-            var a = 0.5 - c((lat2 - lat1) * p)/2 +
-                    c(lat1 * p) * c(lat2 * p) *
-                    (1 - c((lon2 - lon1) * p))/2;
+            var R = 6371;
+            var dLat = this.deg2rad(lat2-lat1);
+            var dLon = this.deg2rad(lon2-lon1);
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c;
+            return d / 1000;
+        },
 
-            return 12742 * Math.asin(Math.sqrt(a));
+        deg2rad: function(deg) {
+            return deg * (Math.PI/180);
         },
 
         initMap: function(callback) {
