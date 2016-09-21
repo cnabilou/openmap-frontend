@@ -14,6 +14,40 @@
     animation: pulse 1.5s infinite;
 }
 
+.map-gym {
+    background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Harmony.png);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    left: -18px;
+    top: -18px;
+
+    &.map-gym-mystic {
+        background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Mystic.png);
+    }
+
+    &.map-gym-valor {
+        background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Valor.png);
+    }
+
+    &.map-gym-instinct {
+        background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Instinct.png);
+    }
+}
+
+.map-pokestop {
+    background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png);
+    width: 31px;
+    height: 31px;
+    cursor: pointer;
+    left: -16px;
+    top: -16px;
+
+    &.map-pokestop-lured {
+        background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png);
+    }
+}
+
 .map-pokemon, .map-pokestop, .map-gym {
     outline: none;
 
@@ -23,18 +57,25 @@
 }
 
 .map-pokemon {
-    &.timer {
+    width: 65px;
+    height: 65px;
+    cursor: pointer;
+    left: -33px;
+    top: -45px;
+
+    .map-pokemon-timer {
         background-color: rgba(0, 0, 0, 0.5);
         border-radius: 5px;
-        padding: 3px;
+        height: 19px;
+        line-height: 19px;
         color: #fff;
         margin: 0 auto;
-        font-size: 9pt;
+        font-size: 8pt;
         text-align: center;
-        width: 40px;
+        width: 36px;
         position: absolute;
-        margin-top: 25px;
-        margin-left: -10px;
+        top: 47px;
+        left: 15px;
     }
 }
 

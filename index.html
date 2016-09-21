@@ -14,6 +14,9 @@
         <link rel="icon" type="image/png" href="https://openpokemap.pw/favicon.png">
 
         <!-- static content -->
+        <!-- mapbox -->
+        <link href='https://api.mapbox.com/mapbox-gl-js/v0.24.0/mapbox-gl.css' rel='stylesheet' />
+
         <!-- material -->
         <link rel="stylesheet" href="static/css/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
@@ -126,7 +129,8 @@
             <ul>
                 <li><a class="btn-floating red" href="#settings-modal" id="settings-trigger"><i class="mdi mdi-settings"></i></a></li>
                 <li><a class="btn-floating yellow darken-1" id="locate-trigger"><i class="mdi mdi-map-marker-radius"></i></a></li>
-                <li><a class="btn-floating green"><i class="mdi mdi-replay"></i></a></li>
+                <li><a class="btn-floating green" id="reload-trigger"><i class="mdi mdi-replay"></i></a></li>
+                <li><a class="btn-floating orange" id="restore-pitchbearing"><i class="mdi mdi-backup-restore"></i></a></li>
             </ul>
         </div>
 

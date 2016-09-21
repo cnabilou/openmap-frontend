@@ -31,7 +31,6 @@ $(function() {
     var app = {
         map: null,
         settings: {},
-        clickedMarker: null,
         scanCircle: null,
         working: false,
         hiddenPokemon: [],
@@ -161,16 +160,15 @@ $(function() {
             try {
                 if(navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(location) {
-                        self.map.setView(new L.LatLng(location.coords.latitude, location.coords.longitude), 15);
-
-                        L.marker([location.coords.latitude, location.coords.longitude], {
-                            icon: L.icon.glyph({
-                                prefix: 'mdi',
-                                glyph: 'account-location',
-                                background: false,
-                                glyphSize: '15pt'
-                            })
-                        }).addTo(self.map);
+                        self.map.flyTo({
+                            center: [location.coords.longitude, location.coords.latitude],
+                            speed: 1,
+                            zoom: 14,
+                            curve: 1,
+                            easing: function(t) {
+                                return t;
+                            }
+                        });
                     });
                 }
             } catch(e){}//ignored
@@ -189,6 +187,10 @@ $(function() {
                 self.saveSettings();
             });
 
+            $("#reload-trigger").on('click', function() {
+                self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function(){});
+            });
+
             $("#exit-welcome").on('click', function() {
                 if(!$("#show-again-welcome").is(':checked')) {
                     if(self.storage.available()) {
@@ -197,34 +199,25 @@ $(function() {
                 }
             });
 
+            $("#restore-pitchbearing").on('click', function() {
+                self.map.setPitch(0);
+                self.map.setBearing(0);
+            });
+
             self.map.on('click', function(e) {
                 if(!self.working) {
                     self.working = true;
 
-                    if(self.clickedMarker != null) self.map.removeLayer(self.clickedMarker);
-                    self.clickedMarker = L.marker(e.latlng, {
-                        icon: L.icon.glyph({
-                            prefix: 'mdi',
-                            glyph: 'map-marker',
-                            background: false,
-                            glyphSize: '15pt'
-                        })
-                    }).addTo(self.map);
-
+                    console.log(self.scanCircle);
                     if(self.scanCircle != null) self.map.removeLayer(self.scanCircle);
-                    self.scanCircle = L.circle(e.latlng, 70, {
-                        color: '#ff6600',
-                        fillColor: '#ff6600',
-                        fillOpacity: 0.5,
-                        className: 'scanCircle'
-                    }).addTo(self.map);
+                    self.scanCircle = self.createCircle(self.map, [e.lngLat.lng, e.lngLat.lat], 70, '#ff6600');
 
-                    self.loadCache(e.latlng.lat, e.latlng.lng, function(){});
+                    self.loadCache(e.lngLat.lat, e.lngLat.lng, function(){});
 
                     $.ajax({
                         type: 'POST',
                         url: self.api.url + '/q',
-                        data: 'lat=' + e.latlng.lat + '&lng=' + e.latlng.lng,
+                        data: 'lat=' + e.lngLat.lat + '&lng=' + e.lngLat.lng,
                         timeout: self.api.timeout * 1000,
                         success: function(data) {
                             if(typeof data !== 'object') data = $.parseJSON(data);
@@ -234,12 +227,7 @@ $(function() {
 
                                 var color = status ? '#8B008B' : '#ff0000';
 
-                                if(self.scanCircle != null) self.map.removeLayer(self.scanCircle);
-                                self.scanCircle = L.circle(e.latlng, 70, {
-                                    color: color,
-                                    fillColor: color,
-                                    fillOpacity: 0.5
-                                }).addTo(self.map);
+                                if(self.scanCircle != null) self.map.setPaintProperty(self.scanCircle, 'fill-color', color);
                             });
                         }
                     });
@@ -252,7 +240,7 @@ $(function() {
             });
 
             setInterval(function() {
-                $(".map-pokemon.timer[data-expired=false]").each(function() {
+                $(".map-pokemon-timer[data-expired=false]").each(function() {
                     var timeRemaining = parseInt($(this).data("expiry"), 10) - Math.round(new Date() / 1000);
 
                     if(timeRemaining < 0) {
@@ -271,28 +259,22 @@ $(function() {
         initMap: function(callback) {
             var self = this;
 
-            self.map = new L.Map('map', {
-                zoomControl: false,
-                attributionControl: false
-            });
-
-            // start in Santa Monica
-            self.map.setView(new L.LatLng(34.0095897345215,-118.49791288375856),16);
-
             self.currentPosition.lat = 34.0095897345215
             self.currentPosition.lng = -118.49791288375856;
 
-            L.control.attribution({
-                position: 'topright',
-                prefix: 'Leaflet | Map tiles hosted by <a href="https://fastpokemap.se" target="_blank">FPM</a> | © OpenStreetMap contributors'
-            }).addTo(self.map);
+            mapboxgl.accessToken = 'tk.opm';
+            mapboxgl.config.API_URL = 'http://tiles.fastpokemap.se';
 
-            var gl = L.mapboxGL({
-                accessToken: "opm",
-                style: 'static/data/map.json'
-            }).addTo(this.map);
-            
-            callback();
+            self.map = new mapboxgl.Map({
+                container: 'map',
+                style: 'static/data/map.json',
+                hash: false,
+                scrollZoom: true,
+                center: [self.currentPosition.lng, self.currentPosition.lat],
+                zoom: 14
+            });
+
+            self.map.on('load', function(){callback();});
         },
 
         initData: function(callback) {
@@ -330,6 +312,60 @@ $(function() {
             });
         },
 
+        createCircle: function(map, center, radius, color) {
+            var coords = {
+                latitude: center[1],
+                longitude: center[0]
+            };
+
+            radius = radius / 1000; // meters to km
+
+            var ret = [];
+            var distanceX = radius / (111.320 * Math.cos(coords.latitude * Math.PI / 180));
+            var distanceY = radius / 110.574;
+
+            var theta, x, y;
+            for(var i=0; i < 128; i++) {
+                theta = (i / 128) * (2 * Math.PI);
+                x = distanceX * Math.cos(theta);
+                y = distanceY * Math.sin(theta);
+
+                ret.push([coords.longitude+x, coords.latitude+y]);
+            }
+            ret.push(ret[0]);
+
+            var geojson = {
+                "type": "geojson",
+                "data": {
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [ret]
+                        }
+                    }]
+                }
+            };
+
+            var randomId = Math.random().toString(36).substr(2, 5);
+
+            map.addSource(randomId, geojson);
+
+            map.addLayer({
+                id: randomId,
+                type: "fill",
+                source: randomId,
+                layout: {},
+                paint: {
+                    "fill-color": color,
+                    "fill-opacity": 0.5
+                }
+            });
+
+            return randomId;
+        },
+
         handleData: function(data, callback) {
             var self = this;
 
@@ -337,7 +373,7 @@ $(function() {
                 $.each(data.MapObjects, function(k, mapObject) {
                     if(mapObject.Type == 1) {
                         if(self.objectUUIDs.pokemons.indexOf(mapObject.Id) == -1) {
-                            var marker = L.marker([mapObject.Lat, mapObject.Lng], {
+                            /*var marker = L.marker([mapObject.Lat, mapObject.Lng], {
                                 icon: new L.PokemonIcon({
                                     html: '<div class="map-pokemon" data-pokemonid="' + mapObject.PokemonId + '">' +
                                             '<div class="pi pi-' + mapObject.PokemonId + ' pi-small" style="position: absolute; margin-top: -22px; margin-left: -22px"></div>' +
@@ -357,49 +393,51 @@ $(function() {
                                                 layer.setZIndexOffset(1);
                                 });
                                 this.setZIndexOffset(9999);
-                            });
+                            });*/
+
+                            var marker = document.createElement('div');
+                            marker.className = 'map-pokemon';
+                            marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
+
+                            new mapboxgl.Marker(marker)
+                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                                .addTo(self.map);
 
                             self.objectUUIDs.pokemons.push(mapObject.Id);
                         }
                     } else if(mapObject.Type == 2) {
                         if(self.objectUUIDs.pokestops.indexOf(mapObject.Id) == -1) {
-                            L.marker([mapObject.Lat, mapObject.Lng], {
-                                icon: new L.icon({
-                                    iconUrl: (mapObject.Lured ?
-                                                'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png' :
-                                                'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Pstop.png'),
-                                    iconSize: [31, 31],
-                                    iconAnchor: [16, 16],
-                                    className: 'map-pokestop'
-                                })
-                            }).addTo(self.map);
+                            var marker = document.createElement('div');
+                            marker.className = 'map-pokestop ' + (mapObject.Lured ? 'map-pokestop-lured' : '');
+
+                            new mapboxgl.Marker(marker)
+                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                                .addTo(self.map);
 
                             self.objectUUIDs.pokestops.push(mapObject.Id);
                         }
                     } else if (mapObject.Type == 3) {
                         if(self.objectUUIDs.gyms.indexOf(mapObject.Id) == -1) {
-                            var icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Harmony.png';
+                            var team = 'harmony';
 
                             switch(mapObject.Team) {
                                 case 1:
-                                    icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Instinct.png';
+                                    team = 'instinct';
                                     break;
                                 case 2:
-                                    icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Mystic.png';
+                                    team = 'mystic';
                                     break;
                                 case 3:
-                                    icon_url = 'https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Valor.png';
+                                    team = 'valor';
                                     break;
                             }
 
-                            L.marker([mapObject.Lat, mapObject.Lng], {
-                                icon: new L.icon({
-                                    iconUrl: icon_url,
-                                    iconSize: [36, 36],
-                                    iconAnchor: [18, 18],
-                                    className: 'map-gym'
-                                })
-                            }).addTo(self.map);
+                            var marker = document.createElement('div');
+                            marker.className = 'map-gym map-gym-' + team;
+
+                            new mapboxgl.Marker(marker)
+                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                                .addTo(self.map);
 
                             self.objectUUIDs.gyms.push(mapObject.Id);
                         }
@@ -493,13 +531,13 @@ $(function() {
                 self.togglePokemonDiv($(this), hidden);
 
                 if(hidden) {
-                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "] .map-pokemon.timer[data-expired=false]").fadeTo(500, 0, function() {
+                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "] .map-pokemon-timer[data-expired=false]").fadeTo(500, 0, function() {
                         $(this).parent().css("visibility", "hidden");
                     });
 
                     hiddenPokemonTmp.push($(this).attr("data-pokemon-id"));
                 } else {
-                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "] .map-pokemon.timer[data-expired=false]").fadeTo(0, 500, function() {
+                    $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "] .map-pokemon-timer[data-expired=false]").fadeTo(0, 500, function() {
                         $(this).parent().css("visibility", "visible");
                     });
                 }
