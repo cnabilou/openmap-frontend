@@ -290,15 +290,8 @@ $(function() {
             var gl = L.mapboxGL({
                 accessToken: "opm",
                 style: 'static/data/map.json'
-            });
-
-            console.log(gl);
-
-            //gl.addTo(self.map);
-            self.map.addLayer(gl);
-
-            self.locateUser();
-
+            }).addTo(this.map);
+            
             callback();
         },
 
