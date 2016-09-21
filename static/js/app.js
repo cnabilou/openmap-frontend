@@ -37,6 +37,8 @@ $(function() {
         },
 
         togglePokemonDiv: function(div, toggleOverride) {
+            console.log(div);
+
             if(typeof toggleOverride == 'undefined') {
                 if(div.attr("data-selected") == "true") {
                     div.addClass("hidden");
@@ -446,7 +448,6 @@ $(function() {
 
                 callback(true);
             } else {
-                console.error("Invalid data");
                 Materialize.toast((typeof data.Error !== 'undefined' ? data.Error : 'An error occured when fetching map objects.'), 6000, 'red');
                 callback(false);
             }
@@ -543,8 +544,7 @@ $(function() {
                 }
             });
 
-            if(self.hiddenPokemon == hiddenPokemonTmp || hiddenPokemonTmp.length == 0) {
-                console.log(self.settings['pokemons-show']);
+            if(self.hiddenPokemon == hiddenPokemonTmp || hiddenPokemonTmp.length == 0 || hiddenPokemonTmp.length == $("#shown-pokemons .pokemon-list-pokemon").length) {
                 if(!self.settings['pokemons-show']) {
                     $(".map-pokemon .map-pokemon-timer[data-expired=false]").fadeTo(500, 0, function() {
                         $(this).parent().css("visibility", "hidden");
