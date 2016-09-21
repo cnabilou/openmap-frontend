@@ -76,7 +76,11 @@ $(function() {
 
             var self = this;
 
-            $("#map").height($(window).height());
+            $("#map").css("height", $(window).height());
+            $("body").css({
+                height: $(window).height(),
+                overflow: 'hidden'
+            });
 
             self.initMap(function() {
                 self.initData(function() {
