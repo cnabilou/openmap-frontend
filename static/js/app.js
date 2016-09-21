@@ -76,6 +76,8 @@ $(function() {
 
             var self = this;
 
+            $("#map").height($(window).height());
+
             self.initMap(function() {
                 self.initData(function() {
                     self.loadSettings();
@@ -273,7 +275,7 @@ $(function() {
                 center: [self.currentPosition.lng, self.currentPosition.lat],
                 zoom: 14,
                 attributionControl: {
-                    position: 'top-left'
+                    position: 'top-right'
                 }
             });
 
