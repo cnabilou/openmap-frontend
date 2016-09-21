@@ -397,7 +397,7 @@ $(function() {
                         if(self.objectUUIDs.pokemons.indexOf(mapObject.Id) == -1) {
                             var marker = document.createElement('div');
                             marker.className = 'map-pokemon';
-                            marker.dataSet['pokemon-id'] = mapObject.PokemonId;
+                            marker.dataset['pokemon-id'] = mapObject.PokemonId;
                             marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + self.prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
 
                             new mapboxgl.Marker(marker)
