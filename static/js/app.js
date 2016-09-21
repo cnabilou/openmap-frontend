@@ -261,7 +261,7 @@ $(function() {
 
                 var distance = self.distanceBetween(self.currentPosition.lat, self.currentPosition.lng, self.lastCachePosition.lat, self.lastCachePosition.lng);
 
-                if(distance > 420 && self.map.getZoom() >= 14) {
+                if(distance > 700 && self.map.getZoom() >= 14) {
                     self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function(){});
                 }
             });
