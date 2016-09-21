@@ -77,15 +77,15 @@ $(function() {
 
             var self = this;
 
-            self.initMap();
+            self.initMap(function() {
+                self.initData(function() {
+                    self.loadSettings();
+                    self.initListeners();
 
-            self.initData(function() {
-                self.loadSettings();
-                self.initListeners();
-
-                setTimeout(function() {
-                    if(jQuery.browser.mobile) $("a:not([href^=#])").attr("target", "_blank");
-                }, 350);
+                    setTimeout(function() {
+                        if(jQuery.browser.mobile) $("a:not([href^=#])").attr("target", "_blank");
+                    }, 350);
+                });
             });
 
             if(!self.storage.available() || typeof self.storage.get("PGOM_show_welcome") !== 'string') {
@@ -268,7 +268,7 @@ $(function() {
             }, 1000);
         },
 
-        initMap: function() {
+        initMap: function(callback) {
             var self = this;
 
             self.map = new L.Map('map', {
@@ -293,6 +293,8 @@ $(function() {
             }).addTo(self.map);
 
             self.locateUser();
+
+            callback();
         },
 
         initData: function(callback) {
