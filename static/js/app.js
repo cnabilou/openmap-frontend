@@ -287,10 +287,14 @@ $(function() {
                 prefix: 'Leaflet | Map tiles hosted by <a href="https://fastpokemap.se" target="_blank">FPM</a> | © OpenStreetMap contributors'
             }).addTo(self.map);
 
+            console.info("Successfully added attribution");
+
             var gl = L.mapboxGL({
                 accessToken: "opm",
                 style: 'static/data/map.json'
             }).addTo(self.map);
+
+            console.info("Successfully added GL");
 
             self.locateUser();
 
@@ -305,12 +309,9 @@ $(function() {
                 success: function(data) {
                     if(typeof data !== 'object') $.parseJSON(data);
 
-                    console.info("Loaded Pokémon");
-
                     self.pokemons = data;
 
                     self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function() {
-                        console.info("Loaded current position cache");
                         callback();
                     });
                 }
