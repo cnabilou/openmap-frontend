@@ -87,6 +87,8 @@ $(function() {
             });
 
             self.initMap(function() {
+                self.locateUser();
+
                 self.initData(function() {
                     self.loadSettings();
                     self.initListeners();
