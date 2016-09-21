@@ -269,6 +269,8 @@ $(function() {
         },
 
         distanceBetween: function(lat1, lon1, lat2, lon2) {
+            console.log(lat1,lon1,lat2,lon2);
+
             var R = 6371;
             var dLat = this.deg2rad(lat2-lat1);
             var dLon = this.deg2rad(lon2-lon1);
@@ -327,6 +329,9 @@ $(function() {
 
         loadCache: function(lat, lng, cb) {
             var self = this;
+
+            self.lastCachePosition.lat = lat;
+            self.lastCachePosition.lng = lng;
 
             $.ajax({
                 type: 'POST',
