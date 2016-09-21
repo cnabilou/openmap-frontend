@@ -260,17 +260,14 @@ $(function() {
                 self.currentPosition.lng = self.map.getCenter().lng;
 
                 var distance = self.distanceBetween(self.currentPosition.lat, self.currentPosition.lng, self.lastCachePosition.lat, self.lastCachePosition.lng);
-                console.log(distance);
 
-                if(distance * 1000 > 420 && self.map.getZoom() >= 14) {
+                if(distance > 420 && self.map.getZoom() >= 14) {
                     self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function(){});
                 }
             });
         },
 
         distanceBetween: function(lat1, lon1, lat2, lon2) {
-            console.log(lat1,lon1,lat2,lon2);
-
             var R = 6371;
             var dLat = this.deg2rad(lat2-lat1);
             var dLon = this.deg2rad(lon2-lon1);
