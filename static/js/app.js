@@ -277,7 +277,7 @@ $(function() {
                     Math.sin(dLon/2) * Math.sin(dLon/2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             var d = R * c;
-            return d / 1000;
+            return d * 1000;
         },
 
         deg2rad: function(deg) {
