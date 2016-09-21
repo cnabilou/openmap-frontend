@@ -294,7 +294,8 @@ $(function() {
 
             console.log(gl);
 
-            gl.addTo(self.map);
+            //gl.addTo(self.map);
+            self.map.addLayer(gl);
 
             self.locateUser();
 
