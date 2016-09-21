@@ -79,6 +79,16 @@ $(function() {
                         $(".pokemon-list").append("<div class=\"pokemon-list-pokemon\" data-pokemon-id=\"" + id + "\" data-selected=\"true\"><div class=\"pokemon-list-pokemon-image pi pi-" + id + "\"></div><div class=\"pokemon-list-pokemon-name\">" + name + "</div></div>");
                     });
 
+                    self.calibratePokemonList();
+
+                    $("#shown-pokemons .pokemon-list-pokemon").on('click', function() {
+                        $("[data-setting=pokemons-show] .setting-controller").attr("disabled", "disabled");
+                    });
+
+                    $(".pokemon-list .pokemon-list-pokemon").on('click', function() {
+                        self.togglePokemonDiv($(this));
+                    });
+
                     self.loadSettings();
                     self.initListeners();
 
@@ -91,16 +101,6 @@ $(function() {
             if(!self.storage.available() || typeof self.storage.get("PGOM_show_welcome") !== 'string') {
                 $('#init-modal').openModal();
             }
-
-            self.calibratePokemonList();
-
-            $("#shown-pokemons .pokemon-list-pokemon").on('click', function() {
-                $("[data-setting=pokemons-show] .setting-controller").attr("disabled", "disabled");
-            });
-
-            $(".pokemon-list .pokemon-list-pokemon").on('click', function() {
-                self.togglePokemonDiv($(this));
-            });
 
             $(window).on('resize', function() {
                 self.calibratePokemonList();
