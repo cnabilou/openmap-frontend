@@ -1,5 +1,5 @@
 {
-   "attribution":"<a href=\"http://www.openstreetmap.org/about/\" target=\"_blank\">&copy; OpenStreetMap contributors</a>",
+   "attribution":"<a href=\"http://www.openstreetmap.org/about/\" target=\"_blank\">&copy; OpenStreetMap contributors</a> | Map tiles hosted by <a href=\"https://fastpokemap.se\" target=\"_blank\">FPM</a>",
    "center":"8.5388,47.3434,12",
    "description":"Free vector tiles from from http://osm2vectortiles.org",
    "maxzoom":14,

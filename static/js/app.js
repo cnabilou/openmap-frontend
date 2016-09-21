@@ -162,7 +162,7 @@ $(function() {
                     navigator.geolocation.getCurrentPosition(function(location) {
                         self.map.flyTo({
                             center: [location.coords.longitude, location.coords.latitude],
-                            speed: 1,
+                            speed: 0.2,
                             zoom: 14,
                             curve: 1,
                             easing: function(t) {
@@ -271,7 +271,10 @@ $(function() {
                 hash: false,
                 scrollZoom: true,
                 center: [self.currentPosition.lng, self.currentPosition.lat],
-                zoom: 14
+                zoom: 14,
+                attributionControl: {
+                    position: 'top-left'
+                }
             });
 
             self.map.on('load', function(){callback();});
