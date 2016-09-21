@@ -90,6 +90,10 @@ $(function() {
                 self.locateUser();
 
                 self.initData(function() {
+                    $.each(self.pokemons, function(id, name) {
+                        $(".pokemon-list").append("<div class=\"pokemon-list-pokemon\" data-pokemon-id=\"" + id + "\" data-selected=\"true\"><div class=\"pokemon-list-pokemon-image pi pi-" + id + "\"></div><div class=\"pokemon-list-pokemon-name\">" + name + "</div></div>");
+                    });
+
                     self.loadSettings();
                     self.initListeners();
 
@@ -102,10 +106,6 @@ $(function() {
             if(!self.storage.available() || typeof self.storage.get("PGOM_show_welcome") !== 'string') {
                 $('#init-modal').openModal();
             }
-
-            $.each(self.pokemons, function(id, name) {
-                $(".pokemon-list").append("<div class=\"pokemon-list-pokemon\" data-pokemon-id=\"" + id + "\" data-selected=\"true\"><div class=\"pokemon-list-pokemon-image pi pi-" + id + "\"></div><div class=\"pokemon-list-pokemon-name\">" + name + "</div></div>");
-            });
 
             self.calibratePokemonList();
 
@@ -585,7 +585,7 @@ $(function() {
 
             if(self.hiddenPokemon == hiddenPokemonTmp || hiddenPokemonTmp.length == 0) {
                 if(!self.settings['pokemons-show']) {
-                    $(".map-pokemon .timer[data-expired=false]").fadeTo(500, 0, function() {
+                    $(".map-pokemon .map-pokemon-timer[data-expired=false]").fadeTo(500, 0, function() {
                         $(this).parent().css("visibility", "hidden");
                     });
 
@@ -593,7 +593,7 @@ $(function() {
                         self.togglePokemonDiv($(this), true);
                     });
                 } else {
-                    $(".map-pokemon .timer[data-expired=false]").fadeTo(0, 500, function() {
+                    $(".map-pokemon .map-pokemon-timer[data-expired=false]").fadeTo(0, 500, function() {
                         $(this).parent().css("visibility", "visible");
                     });
 
