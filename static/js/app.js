@@ -275,7 +275,7 @@ $(function() {
                 self.currentPosition.lat = self.map.getCenter().lat;
                 self.currentPosition.lng = self.map.getCenter().lng;
 
-                if(self.distanceBetween(self.currentPosition.lat, self.currentPosition.lng, self.lastCachePosition.lat, self.lastCachePosition.lng) * 1000 > 420 && self.map.getZoom() > 11) {
+                if(self.distanceBetween(self.currentPosition.lat, self.currentPosition.lng, self.lastCachePosition.lat, self.lastCachePosition.lng) * 1000 > 420 && self.map.getZoom() > 14) {
                     self.loadCache(self.currentPosition.lat, self.currentPosition.lng, function(){});
                 }
             });
