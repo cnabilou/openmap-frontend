@@ -183,6 +183,7 @@ $(function() {
             var self = this;
 
             $("#settings-trigger").leanModal();
+            $("#donate-trigger").leanModal();
 
             $("#locate-trigger").on('click', function() {
                 self.locateUser();
