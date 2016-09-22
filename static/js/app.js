@@ -168,10 +168,10 @@ $(function() {
                             }
                         });
 
-                        self.map.currentPosition.lat = location.coords.latitude;
-                        self.map.currentPosition.lng = location.coords.longitude;
-                        self.map.lastCachePosition.lat = location.coords.latitude;
-                        self.map.lastCachePosition.lng = location.coords.longitude;
+                        self.currentPosition.lat = location.coords.latitude;
+                        self.currentPosition.lng = location.coords.longitude;
+                        self.lastCachePosition.lat = location.coords.latitude;
+                        self.lastCachePosition.lng = location.coords.longitude;
 
                         self.loadCache(location.coords.longitude, location.coords.latitude, function(){});
                     });
