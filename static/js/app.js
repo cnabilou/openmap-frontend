@@ -60,7 +60,7 @@ $(function() {
 
         init: function() {
             $(document).ajaxError(function() {
-                Materialize.toast('An error occured when excecuting a task.', 6000, 'red');
+                Materialize.toast('An error occured when loading an external resource', 6000, 'red');
             });
 
             var self = this;
@@ -234,6 +234,11 @@ $(function() {
 
                                 if(self.scanCircle != null) self.map.setPaintProperty(self.scanCircle, 'fill-color', color);
                             });
+                        },
+                        error: function() {
+                            self.working = false;
+
+                            if(self.scanCircle != null) self.map.setPaintProperty(self.scanCircle, 'fill-color', '#ff0000');
                         }
                     });
                 }
