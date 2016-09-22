@@ -444,13 +444,13 @@ $(function() {
 
                             switch(mapObject.Team) {
                                 case 1:
-                                    team = 'valor';
+                                    team = 'mystic';
                                     break;
                                 case 2:
-                                    team = 'instinct';
+                                    team = 'valor';
                                     break;
                                 case 3:
-                                    team = 'mystic';
+                                    team = 'instinct';
                                     break;
                             }
 
