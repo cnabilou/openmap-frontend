@@ -36,6 +36,16 @@
         </script>
     </head>
     <body>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Web -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:728px;height:90px"
+             data-ad-client="ca-pub-6701017898024314"
+             data-ad-slot="1749100184"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -46,7 +56,47 @@
             <div class="modal-content">
                 <h4>Settings</h4>
                 <ul class="collection with-header">
-                    <li class="collection-header"><h4>Filters</h4></li>
+                    <li class="collection-header"><h5 style="margin: 0; margin-left: 8px;">Map</h5></li>
+                    <li class="collection-item">
+                        <div class="switch right" data-setting="3d-map">
+                            <label>
+                                Off
+                                <input checked type="checkbox" class="setting-controller">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+
+                        3D / map turning
+                    </li>
+                    <li class="collection-item">
+                        <div class="switch right" data-setting="geolocation-autoupdate">
+                            <label>
+                                Off
+                                <input type="checkbox" class="setting-controller">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+
+                        Update location automatically
+                    </li>
+                    <li class="collection-item">
+                        <div class="switch right" data-setting="geolocation-autocenter">
+                            <label>
+                                Off
+                                <input checked type="checkbox" class="setting-controller">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+
+                        Center map when location changes
+                    </li>
+                </ul>
+
+                <ul class="collection with-header">
+                    <li class="collection-header"><h5 style="margin: 0; margin-left: 8px;">Filters</h5></li>
                     <li class="collection-item">
                         <div class="switch right" data-setting="gyms-show">
                             <label>
@@ -86,7 +136,7 @@
                     <li class="collection-item">
                         <ul class="collapsible" data-collapsible="accordion" style="border: 0; margin: 0; box-shadow: none; line-height: normal !important">
                             <li>
-                                <div class="collapsible-header" style="min-height: 0; line-height: normal !important; border: 0; padding: 0">Shown pokemons <i class="mdi mdi-chevron-down mdi-list mdi-right"></i></div>
+                                <div class="collapsible-header" style="min-height: 0; line-height: normal !important; border: 0; padding: 0">Shown Pokémon <i class="mdi mdi-chevron-down mdi-list mdi-right"></i></div>
                                 <div class="collapsible-body" style="padding-top: 15px">
                                     <p style="margin: 0; margin-bottom: 10px; padding: 0">
                                         <button class="waves-effect waves-light btn red" id="reset-pokemon-filter">
@@ -109,11 +159,67 @@
         <div id="init-modal" class="modal">
             <div class="modal-content">
                 <h4>Welcome to OpenPokeMap</h4>
-                <p>This is a website created by a member of the community, our data can be downloaded from <a href="http://openpokemap.pw/data">here</a>, you are also free to use our api but you have to get an auth key from <a href="http://openpokemap.pw/data">here</a></p>
-                <p><a href="support"> Get support </a></p>
+                <p>Hello, and welcome to OpenPokeMap! We're a free Pokémon Go mapping website. You do not need to register an account – all scans are executed in our servers. We are open source too! Visit our GitHub <a href="http://github.com/pogointel/" target="_blank"><i class="mdi mdi-github-circle"></i> here</a> and Twitter <a href="http://twitter.com/openpokemap" target="_blank"><i class="mdi mdi-twitter"></i> here</a>.</p>
+                <p><a href="support">Get support</a></p>
                 <p>
                     <input type="checkbox" class="filled-in" id="show-again-welcome" checked="checked" />
                     <label for="show-again-welcome">Show again</label>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="exit-welcome">Dismiss</a>
+            </div>
+        </div>
+
+        <div id="faq-modal" class="modal">
+            <div class="modal-content">
+                <h4 style="display: inline-block; margin-right: 10px">FAQ</h4>
+                <span style="opacity: 0.5; display: inline-block">Frequently asked questions</span>
+
+                <p>
+                    <h5 style="opacity: 0.7">There is nothing on my map! How do I scan?</h5>
+                    If the area you are viewing has not been scanned before, click the map and we will scan the area for Pokémon, Pokéstops and gyms. Next time you visit our site the map will remember Pokéstop and gym locations!
+                </p>
+                <p>
+                    <h5 style="opacity: 0.7">Why is my device not supported?</h5>
+                    We try to use the newest, fastest and most optimal technologies when making OpenPokeMap. Some of these technologies do not work with older devices, browsers or operating systems. Try updating your browser first.
+                </p>
+                <p>
+                    <h5 style="opacity: 0.7">Why do I get <i>Scan failed</i>? / Why is scanning taking so much time?</h5>
+                    Our servers scale automatically by current client count. If all of our workers are currently in use the scan time can be very long or you can't simply scan. Try again later!
+                </p>
+                <p>
+                    <h5 style="opacity: 0.7">Locate button is not working, what do I do?</h5>
+                    Check that you have given locating permissions to OpenPokeMap. If you have and locating is not working, chances are we are fixing the problem. Follow our <a href="http://twitter.com/openpokemap" target="_blank"><i class="mdi mdi-twitter"></i> Twitter</a> for updates.
+                </p>
+                <p>
+                    <h5 style="opacity: 0.7">How can I see lures?</h5>
+                    Lures are only shown when the Pokéstop is fetched with a scan. This is to prevent giving wrong information about lures and when they expire.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="exit-welcome">Dismiss</a>
+            </div>
+        </div>
+
+        <div id="no-support-modal" class="modal">
+            <div class="modal-content">
+                <h4>Your browser is outdated</h4>
+                <p>OpenPokeMap is built up on different technologies, but your browser, operating system or/and device does not support all required technologies. You can still try to see if the map works. We have added many backup (or fallback) technologies, but they may not work so well.</p>
+                <p>
+                    <h5>Technologies with no support</h5>
+                    <ul id="unsupported"></ul>
+                </p>
+                <p>
+                    <h5>Supported browsers</h5> <!-- http://caniuse.com/#search=gl -->
+                    <ul>
+                        <li><a href="http://www.apple.com/safari/">Safari</a> 9 and higher (iOS too)</li>
+                        <li><a href="http://www.google.com/chrome/">Chrome</a> 18 and higher</li>
+                        <li><a href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a> 24 and newer</li>
+                        <li><a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Microsoft Edge</a> 13 and newer</li>
+                        <li><a href="https://www.microsoft.com/en-us/download/internet-explorer-11-for-windows-7-details.aspx">Internet Explorer</a> 11 and newer (partially)</li>
+                        <li><a href="http://www.opera.com/">Opera</a> 19 and higher</li>
+                    </ul>
                 </p>
             </div>
             <div class="modal-footer">
@@ -131,7 +237,7 @@
                             <div class="col s6" style="border-right: 1px solid #ababab">
                                 <img src="static/img/bitcoin.png" alt="Bitcoin logo" style="width: 100%"><br />
                                 <h5>Bitcoin</h5>
-                                <p style="height: 100px">Bitcoin is the currency of the future – are you from the future? Bitcoin has no fees and is the best method to donate us money.</p>
+                                <p style="min-height: 100px">Bitcoin is the currency of the future – are you from the future? Bitcoin has no fees and is the best method to donate us money.</p>
                                 <button class="waves-effect waves-light btn green" style="width: 100%;margin-top:10px;">Donate with Bitcoin</button>
                                 <p style="text-align:center;width:100%;overflow-wrap:break-word"><b>1BBX6o8MA82upv1uyn1LtfHs1HbsZ6Vhj6</b></p>
                             </div>
@@ -143,7 +249,7 @@
                             <div class="col s6">
                                 <img src="static/img/paypal.png" alt="PayPal logo" style="width: 100%"><br />
                                 <h5>PayPal</h5>
-                                <p style="height: 104px">Prefer old-fashioned ways? PayPal allows donating with credit cards or PayPal money.</p>
+                                <p style="min-height: 104px">Prefer old-fashioned ways? PayPal allows donating with credit cards or PayPal money.</p>
                                 <button class="waves-effect waves-light btn green" type="submit" style="width: 100%;margin-top:10px;">Donate with PayPal</button>
                             </div>
                         </form>
@@ -155,20 +261,56 @@
             </div>
         </div>
 
-        <div class="fixed-action-btn horizontal" style="top: 15px; left: 0; width: 80px; height: 70px;">
+        <div class="fixed-action-btn" style="top: 15px; left: 25px; width: 80px; height: 70px;">
             <a class="btn-floating btn-large green tooltipped" href="#donate-modal" id="donate-trigger" data-position="bottom" data-delay="50" data-tooltip="Donate"><i class="mdi mdi-cash"></i></a>
         </div>
 
-        <div class="fixed-action-btn horizontal click-to-toggle" id="menu">
+        <div class="fixed-action-btn vertical click-to-toggle" id="menu">
             <a class="btn-floating btn-large red" style="margin-right: 18px">
                 <i class="mdi mdi-menu"></i>
             </a>
 
-            <ul>
-                <li><a class="btn-floating red tooltipped" href="#settings-modal" id="settings-trigger" data-position="top" data-delay="50" data-tooltip="Settings"><i class="mdi mdi-settings"></i></a></li>
-                <li><a class="btn-floating yellow darken-1 tooltipped" id="locate-trigger" data-position="top" data-delay="50" data-tooltip="Locate"><i class="mdi mdi-map-marker-radius"></i></a></li>
-                <li><a class="btn-floating green tooltipped" id="reload-trigger" data-position="top" data-delay="50" data-tooltip="Reload"><i class="mdi mdi-replay"></i></a></li>
-                <li><a class="btn-floating orange tooltipped" id="restore-pitchbearing" data-position="top" data-delay="50" data-tooltip="Reset to 2D"><i class="mdi mdi-backup-restore"></i></a></li>
+            <ul class="vertical-menu-fix">
+                <li>
+                    <a id="settings-trigger" href="#settings-modal">
+                        <div class="chip red white-text menu-chip">Settings</div>
+                        <button class="btn-floating white red-text">
+                            <i class="mdi mdi-settings"></i>
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a id="locate-trigger">
+                        <div class="chip red white-text menu-chip">Locate</div>
+                        <button class="btn-floating white red-text">
+                            <i class="mdi mdi-map-marker-radius"></i>
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a id="reload-trigger">
+                        <div class="chip red white-text menu-chip">Reload</div>
+                        <button class="btn-floating white red-text">
+                            <i class="mdi mdi-replay"></i>
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a id="restore-pitchbearing">
+                        <div class="chip red white-text menu-chip">Reset to 2D</div>
+                        <button class="btn-floating white red-text">
+                            <i class="mdi mdi-backup-restore"></i>
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a id="faq-trigger" href="#faq-modal">
+                        <div class="chip red white-text menu-chip">FAQ</div>
+                        <button class="btn-floating white red-text">
+                            <i class="mdi mdi-information-outline"></i>
+                        </button>
+                    </a>
+                </li>
             </ul>
         </div>
 

@@ -4,16 +4,6 @@
     width: 100%;
 }
 
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.25; }
-    100% { opacity: 1; }
-}
-
-.scanCircle {
-    animation: pulse 1.5s infinite;
-}
-
 .map-gym {
     background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/Harmony.png);
     width: 36px;
@@ -45,6 +35,27 @@
 
     &.map-pokestop-lured {
         background-image: url(https://raw.githubusercontent.com/PokemonGoMap/PokemonGo-Map/develop/static/forts/PstopLured.png);
+    }
+}
+
+.map-currentlocation {
+    background-image: url(../img/location.svg);
+    width: 25px;
+    height: 25px;
+    background-size: 100% 100%;
+    left: -13px;
+    top: -13px;
+}
+
+.map-scancircle-marker {
+    width: 25px;
+    height: 25px;
+    left: -10px;
+    top: -10px;
+
+    i {
+        color: #fff;
+        font-size: 14pt;
     }
 }
 
@@ -100,6 +111,6 @@
 
 @media screen and (max-width: 600px) {
     #menu {
-        bottom: 80px;
+        bottom: 70px;
     }
 }

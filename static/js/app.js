@@ -12,11 +12,6 @@ $(function() {
         scanCircle: null,
         working: false,
         hiddenPokemon: [],
-        objectUUIDs: {
-            pokestops: [],
-            gyms: [],
-            pokemons: []
-        },
         currentPosition: {
             lng: 0,
             lat: 0
@@ -30,6 +25,8 @@ $(function() {
             timeout: 33 // seconds
         },
         pokemons: {},
+        geolocationUpdater: null,
+        autoCenter: true,
 
         prettyTime: function(seconds) {
             var minutes = Math.floor(seconds / 60);
@@ -64,6 +61,8 @@ $(function() {
             });
 
             var self = this;
+
+            var unsupported = [];
 
             $("#map").css("height", $(window).height());
             $("body").css({
@@ -100,8 +99,21 @@ $(function() {
                 });
             });
 
+            if(!self.storage.available()) {
+                unsupported.push("localStorage – settings are not saved");
+            }
+
             if(!self.storage.available() || typeof self.storage.get("PGOM_show_welcome") !== 'string') {
                 $('#init-modal').openModal();
+            }
+
+            if(!mapboxgl.supported()) {
+                unsupported.push("GL – map won't work");
+            }
+
+            if(unsupported.length > 0) {
+                $("#no-support-modal").find("#unsupported").innerHTML("<li>" + unsupported.join("</li><li>") + "</li>");
+                $("#no-support-modal").openModal();
             }
 
             $(window).on('resize', function() {
@@ -159,24 +171,46 @@ $(function() {
             try {
                 if(navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(location) {
-                        self.map.easeTo({
-                            center: [location.coords.longitude, location.coords.latitude],
-                            zoom: 14,
-                            curve: 1,
-                            easing: function(t) {
-                                return t;
-                            }
-                        });
-
-                        self.currentPosition.lat = location.coords.latitude;
-                        self.currentPosition.lng = location.coords.longitude;
-                        self.lastCachePosition.lat = location.coords.latitude;
-                        self.lastCachePosition.lng = location.coords.longitude;
-
-                        self.loadCache(location.coords.longitude, location.coords.latitude, function(){});
+                        self.updatePosition(location);
                     });
                 }
             } catch(e){}//ignored
+        },
+
+        updatePosition: function(location) {
+            var self = this;
+
+            if(this.autoCenter) this.map.easeTo({
+                center: [location.coords.longitude, location.coords.latitude],
+                zoom: 15,
+                curve: 1,
+                easing: function(t) {
+                    return t;
+                }
+            });
+
+            $(".map-currentlocation").remove();
+
+            var marker = document.createElement('div');
+            marker.className = 'map-currentlocation';
+            marker.innerHTML = ' ';
+
+            var mark = new mapboxgl.Marker(marker)
+                .setLngLat([location.coords.longitude, location.coords.latitude])
+                .addTo(self.map);
+
+            self.currentLocationMarker = mark;
+
+            self.currentPosition.lat = location.coords.latitude;
+            self.currentPosition.lng = location.coords.longitude;
+
+
+            if(self.distanceBetween(location.coords.latitude, location.coords.longitude, self.lastCachePosition.lat, self.lastCachePosition.lng) > 300) {
+                self.loadCache(location.coords.longitude, location.coords.latitude, function(){});
+
+                self.lastCachePosition.lat = location.coords.latitude;
+                self.lastCachePosition.lng = location.coords.longitude;
+            }
         },
 
         initListeners: function() {
@@ -184,6 +218,7 @@ $(function() {
 
             $("#settings-trigger").leanModal();
             $("#donate-trigger").leanModal();
+            $("#faq-trigger").leanModal();
 
             $("#locate-trigger").on('click', function() {
                 self.locateUser();
@@ -216,6 +251,16 @@ $(function() {
 
                     if(self.scanCircle != null) self.map.removeLayer(self.scanCircle);
                     self.scanCircle = self.createCircle(self.map, [e.lngLat.lng, e.lngLat.lat], 70, '#ff6600');
+
+                    $(".map-scancircle-marker").remove();
+
+                    var marker = document.createElement('div');
+                    marker.className = 'map-scancircle-marker';
+                    marker.innerHTML = '<i class="mdi mdi-map-marker-circle"></i>';
+
+                    var mark = new mapboxgl.Marker(marker)
+                        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                        .addTo(self.map);
 
                     self.loadCache(e.lngLat.lat, e.lngLat.lng, function(){});
 
@@ -296,7 +341,7 @@ $(function() {
         initMap: function(callback) {
             var self = this;
 
-            self.currentPosition.lat = 34.0095897345215
+            self.currentPosition.lat = 34.0095897345215;
             self.currentPosition.lng = -118.49791288375856;
 
             mapboxgl.accessToken = 'tk.opm';
@@ -308,7 +353,7 @@ $(function() {
                 hash: false,
                 scrollZoom: true,
                 center: [self.currentPosition.lng, self.currentPosition.lat],
-                zoom: 14,
+                zoom: 15,
                 attributionControl: {
                     position: 'top-right'
                 }
@@ -414,55 +459,48 @@ $(function() {
 
             if(data.Ok === true && data.Error.length === 0 && typeof data === 'object') {
                 $.each(data.MapObjects, function(k, mapObject) {
+                    $("[data-uniqueid='" + mapObject.Id + "']").remove();
+
                     if(mapObject.Type == 1) {
-                        if(self.objectUUIDs.pokemons.indexOf(mapObject.Id) == -1) {
-                            var marker = document.createElement('div');
-                            marker.className = 'map-pokemon';
-                            marker.dataset.pokemonid = mapObject.PokemonId.toString();
-                            marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + self.prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
+                        var marker = document.createElement('div');
+                        marker.className = 'map-pokemon';
+                        marker.dataset.pokemonid = mapObject.PokemonId.toString();
+                        marker.dataset.uniqueid = mapObject.Id;
+                        marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + self.prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
 
-                            new mapboxgl.Marker(marker)
-                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
-                                .addTo(self.map);
-
-                            self.objectUUIDs.pokemons.push(mapObject.Id);
-                        }
+                        new mapboxgl.Marker(marker)
+                            .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                            .addTo(self.map);
                     } else if(mapObject.Type == 2) {
-                        if(self.objectUUIDs.pokestops.indexOf(mapObject.Id) == -1) {
-                            var marker = document.createElement('div');
-                            marker.className = 'map-pokestop ' + (mapObject.Lured ? 'map-pokestop-lured' : '');
+                        var marker = document.createElement('div');
+                        marker.dataset.uniqueid = mapObject.Id;
+                        marker.className = 'map-pokestop ' + (mapObject.Lured ? 'map-pokestop-lured' : '');
 
-                            new mapboxgl.Marker(marker)
-                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
-                                .addTo(self.map);
-
-                            self.objectUUIDs.pokestops.push(mapObject.Id);
-                        }
+                        new mapboxgl.Marker(marker)
+                            .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                            .addTo(self.map);
                     } else if (mapObject.Type == 3) {
-                        if(self.objectUUIDs.gyms.indexOf(mapObject.Id) == -1) {
-                            var team = 'harmony';
+                        var team = 'harmony';
 
-                            switch(mapObject.Team) {
-                                case 1:
-                                    team = 'mystic';
-                                    break;
-                                case 2:
-                                    team = 'valor';
-                                    break;
-                                case 3:
-                                    team = 'instinct';
-                                    break;
-                            }
-
-                            var marker = document.createElement('div');
-                            marker.className = 'map-gym map-gym-' + team;
-
-                            new mapboxgl.Marker(marker)
-                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
-                                .addTo(self.map);
-
-                            self.objectUUIDs.gyms.push(mapObject.Id);
+                        switch(mapObject.Team) {
+                            case 1:
+                                team = 'mystic';
+                                break;
+                            case 2:
+                                team = 'valor';
+                                break;
+                            case 3:
+                                team = 'instinct';
+                                break;
                         }
+
+                        var marker = document.createElement('div');
+                        marker.dataset.uniqueid = mapObject.Id;
+                        marker.className = 'map-gym map-gym-' + team;
+
+                        new mapboxgl.Marker(marker)
+                            .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                            .addTo(self.map);
                     }
                 });
 
@@ -604,6 +642,38 @@ $(function() {
                 $(".map-gym").fadeTo(0, 500, function() {
                     $(this).css("visibility", "visible");
                 });
+            }
+
+            if(!self.settings['3d-map']) {
+                self.map.dragRotate.disable();
+                self.map.touchZoomRotate.disableRotation();
+            } else {
+                self.map.dragRotate.enable();
+                self.map.touchZoomRotate.enableRotation();
+            }
+
+            if(!self.settings['geolocation-autoupdate']) {
+                if(self.geolocationUpdater !== null) {
+                    try {
+                        navigator.geolocation.clearWatch(self.geolocationUpdater);
+
+                        self.geolocationUpdater = null;
+                    } catch(e){}//ignored
+                }
+            } else {
+                if(self.geolocationUpdater === null) {
+                    self.geolocationUpdater = navigator.geolocation.watchPosition(function(loc){self.updatePosition(loc)}, function(e){console.error('GeolocationWatch',e);}, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                }
+            }
+
+            if(!self.settings['geolocation-autocenter']) {
+                self.autoCenter = false;
+            } else {
+                self.autoCenter = true;
             }
         },
 
