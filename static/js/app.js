@@ -461,7 +461,7 @@ $(function() {
                 $.each(data.MapObjects, function(k, mapObject) {
                     $("[data-uniqueid='" + mapObject.Id + "']").remove();
 
-                    if(mapObject.Type == 1) {
+                    if(mapObject.Type == 1 && !!self.settings['pokemons-show']) {
                         var marker = document.createElement('div');
                         marker.className = 'map-pokemon';
                         marker.dataset.pokemonid = mapObject.PokemonId.toString();
@@ -471,7 +471,7 @@ $(function() {
                         new mapboxgl.Marker(marker)
                             .setLngLat([+mapObject.Lng, +mapObject.Lat])
                             .addTo(self.map);
-                    } else if(mapObject.Type == 2) {
+                    } else if(mapObject.Type == 2 && !!self.settings['pokestops-show']) {
                         var marker = document.createElement('div');
                         marker.dataset.uniqueid = mapObject.Id;
                         marker.className = 'map-pokestop ' + (mapObject.Lured ? 'map-pokestop-lured' : '');
@@ -479,7 +479,7 @@ $(function() {
                         new mapboxgl.Marker(marker)
                             .setLngLat([+mapObject.Lng, +mapObject.Lat])
                             .addTo(self.map);
-                    } else if (mapObject.Type == 3) {
+                    } else if (mapObject.Type == 3 && !!self.settings['gyms-show']) {
                         var team = 'harmony';
 
                         switch(mapObject.Team) {
