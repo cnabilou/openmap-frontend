@@ -594,11 +594,15 @@ $(function() {
                         $(this).parent().css("visibility", "hidden");
                     });
 
+                    $("<style type=\"text/css\">.map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "]{display:none}</style>").appendTo("head");
+
                     hiddenPokemonTmp.push($(this).attr("data-pokemon-id"));
                 } else {
                     $(".map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "] .map-pokemon-timer[data-expired=false]").fadeTo(0, 500, function() {
                         $(this).parent().css("visibility", "visible");
                     });
+
+                    $("<style type=\"text/css\">.map-pokemon[data-pokemonid=" + $(this).attr("data-pokemon-id") + "]{display:block}</style>").appendTo("head");
                 }
             });
 
@@ -606,6 +610,8 @@ $(function() {
                 if(!self.settings['pokemons-show']) {
                     $(".map-pokemon .map-pokemon-timer[data-expired=false]").fadeTo(500, 0, function() {
                         $(this).parent().css("visibility", "hidden");
+
+                        $("<style type=\"text/css\">.map-pokemon{display:none}</style>").appendTo("head");
                     });
 
                     $("#shown-pokemons .pokemon-list-pokemon").each(function() {
@@ -615,6 +621,8 @@ $(function() {
                     $(".map-pokemon .map-pokemon-timer[data-expired=false]").fadeTo(0, 500, function() {
                         $(this).parent().css("visibility", "visible");
                     });
+
+                    $("<style type=\"text/css\">.map-pokemon{display:block}</style>").appendTo("head");
 
                     $("#shown-pokemons .pokemon-list-pokemon").each(function() {
                         self.togglePokemonDiv($(this), false);
@@ -628,20 +636,28 @@ $(function() {
                 $(".map-pokestop").fadeTo(500, 0, function() {
                     $(this).css("visibility", "hidden");
                 });
+
+                $("<style type=\"text/css\">.map-pokestop{display:none}</style>").appendTo("head");
             } else {
                 $(".map-pokestop").fadeTo(0, 500, function() {
                     $(this).css("visibility", "visible");
                 });
+
+                $("<style type=\"text/css\">.map-pokestop{display:block}</style>").appendTo("head");
             }
 
             if(!self.settings['gyms-show']) {
                 $(".map-gym").fadeTo(500, 0, function() {
                     $(this).css("visibility", "hidden");
                 });
+
+                $("<style type=\"text/css\">.map-gym{display:none}</style>").appendTo("head");
             } else {
                 $(".map-gym").fadeTo(0, 500, function() {
                     $(this).css("visibility", "visible");
                 });
+
+                $("<style type=\"text/css\">.map-gym{display:block}</style>").appendTo("head");
             }
 
             if(!self.settings['3d-map']) {
