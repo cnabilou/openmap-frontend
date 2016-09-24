@@ -462,15 +462,17 @@ $(function() {
                     $("[data-uniqueid='" + mapObject.Id + "']").remove();
 
                     if(mapObject.Type == 1) {
-                        var marker = document.createElement('div');
-                        marker.className = 'map-pokemon';
-                        marker.dataset.pokemonid = mapObject.PokemonId.toString();
-                        marker.dataset.uniqueid = mapObject.Id;
-                        marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + self.prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
+                        if(mapObject.expiry > new Date()) {
+                            var marker = document.createElement('div');
+                            marker.className = 'map-pokemon';
+                            marker.dataset.pokemonid = mapObject.PokemonId.toString();
+                            marker.dataset.uniqueid = mapObject.Id;
+                            marker.innerHTML = '<div class="pi pi-small pi-' + mapObject.PokemonId + '"></div><div class="map-pokemon-timer" data-expired="false" data-expiry="' + mapObject.Expiry + '">' + self.prettyTime(mapObject.Expiry - Math.round(new Date() / 1000)) + '</div>';
 
-                        new mapboxgl.Marker(marker)
-                            .setLngLat([+mapObject.Lng, +mapObject.Lat])
-                            .addTo(self.map);
+                            new mapboxgl.Marker(marker)
+                                .setLngLat([+mapObject.Lng, +mapObject.Lat])
+                                .addTo(self.map);
+                        }
                     } else if(mapObject.Type == 2) {
                         var marker = document.createElement('div');
                         marker.dataset.uniqueid = mapObject.Id;
