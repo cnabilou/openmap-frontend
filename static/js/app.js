@@ -462,7 +462,7 @@ $(function() {
                     $("[data-uniqueid='" + mapObject.Id + "']").remove();
 
                     if(mapObject.Type == 1) {
-                        if(mapObject.expiry > new Date()) {
+                        if(mapObject.expiry > Math.round(new Date() / 1000)) {
                             var marker = document.createElement('div');
                             marker.className = 'map-pokemon';
                             marker.dataset.pokemonid = mapObject.PokemonId.toString();
