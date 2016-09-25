@@ -17,3 +17,35 @@ body {
 .btn-floating i {
     color: inherit !important;
 }
+
+.ad-placement-top, .ad-placement-bottom {
+    height: 60px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    iframe, ins {
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+.ad-placement-top {
+    top: 0;
+}
+
+.ad-placement-bottom {
+    bottom: 0;
+}
+
+#menu {
+    bottom: 30px;
+    right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    #menu {
+        bottom: 70px;
+    }
+}
