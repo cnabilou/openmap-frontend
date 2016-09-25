@@ -462,7 +462,7 @@ $(function() {
                     $("[data-uniqueid='" + mapObject.Id + "']").remove();
 
                     if(mapObject.Type == 1) {
-                        if(mapObject.expiry > Math.round(new Date() / 1000)) {
+                        //if(mapObject.expiry > Math.round(new Date() / 1000)) {
                             var marker = document.createElement('div');
                             marker.className = 'map-pokemon';
                             marker.dataset.pokemonid = mapObject.PokemonId.toString();
@@ -472,7 +472,7 @@ $(function() {
                             new mapboxgl.Marker(marker)
                                 .setLngLat([+mapObject.Lng, +mapObject.Lat])
                                 .addTo(self.map);
-                        }
+                        //}
                     } else if(mapObject.Type == 2) {
                         var marker = document.createElement('div');
                         marker.dataset.uniqueid = mapObject.Id;
